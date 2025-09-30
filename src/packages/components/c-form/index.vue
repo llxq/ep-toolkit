@@ -2,12 +2,10 @@
 defineOptions({
   name: "CForm",
 });
-console.log("CForm");
-debugger;
 </script>
 
 <template>
-  <div class="c-form__container"></div>
+  <div class="c-form__container" />
 </template>
 
 <style scoped lang="scss">

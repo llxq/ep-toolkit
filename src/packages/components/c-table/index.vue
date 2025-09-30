@@ -1,12 +1,11 @@
 <script setup lang="ts">
 defineOptions({
-  name: 'c-table',
-})
+  name: "CTable",
+});
 </script>
 
 <template>
-  <div class="c-table__container">
-  </div>
+  <div class="c-table__container" />
 </template>
 
 <style scoped lang="scss">

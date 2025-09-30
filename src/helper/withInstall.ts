@@ -12,8 +12,7 @@ const createInstallFunction =
   (app: App) => {
     const name = alias || Reflect.get(component, "name");
     if (!name) {
-      console.error("Component is missing a name and cannot be registered:", component);
-      return;
+      throw new Error("Component is missing a name and cannot be registered");
     }
     app.component(name, component);
   };
