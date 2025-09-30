@@ -17,6 +17,7 @@ module.exports = {
   plugins: ["vue", "@typescript-eslint", "prettier"],
   rules: {
     "prettier/prettier": "error",
+    "no-console": "error",
   },
   globals: {
     defineProps: "readonly",

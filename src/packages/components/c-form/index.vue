@@ -1,8 +1,8 @@
 <script setup lang="ts">
 defineOptions({
-  name: 'CForm',
+  name: "CForm",
 });
-console.log('CForm');
+console.log("CForm");
 debugger;
 </script>
 
