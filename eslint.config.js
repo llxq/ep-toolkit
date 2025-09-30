@@ -33,7 +33,29 @@ export default [
     },
     rules: {
       "prettier/prettier": "error",
-      "no-console": "warn",
+      "no-restricted-properties": [
+        "error",
+        {
+          object: "console",
+          property: "log",
+          message: "can only use console.error or console.warn",
+        },
+        {
+          object: "console",
+          property: "info",
+          message: "can only use console.error or console.warn",
+        },
+        {
+          object: "console",
+          property: "debug",
+          message: "can only use console.error or console.warn",
+        },
+        {
+          object: "console",
+          property: "trace",
+          message: "can only use console.error or console.warn",
+        },
+      ],
     },
   },
 ];

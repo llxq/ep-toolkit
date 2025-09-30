@@ -1,8 +1,6 @@
 {
-  "printWidth": 250,
   "tabWidth": 2,
   "semi": true,
-  "trailingComma": "es5",
   "vueIndentScriptAndStyle": false,
   "endOfLine": "lf",
   "useTabs": false

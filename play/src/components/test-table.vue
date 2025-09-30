@@ -1,15 +1,15 @@
 <script setup lang="ts">
 defineOptions({
-  name: "CForm",
+  name: "TestTable",
 });
 </script>
 
 <template>
-  <div class="c-form__container">this is c-form</div>
+  <div class="test-table__container">this is test-table</div>
 </template>
 
 <style scoped lang="scss">
-.c-form__container {
+.test-table__container {
   //
 }
 </style>

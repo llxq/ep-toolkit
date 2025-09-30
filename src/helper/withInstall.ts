@@ -22,8 +22,12 @@ const createInstallFunction =
  * @param component
  * @param alias
  */
-export const withInstallComponent = <T extends Component>(component: T, alias?: string): T => {
-  (component as unknown as TSFCWithInstall<T>).install = createInstallFunction<T>(component, alias);
+export const withInstallComponent = <T extends Component>(
+  component: T,
+  alias?: string,
+): T => {
+  (component as unknown as TSFCWithInstall<T>).install =
+    createInstallFunction<T>(component, alias);
 
   return component as T;
 };
