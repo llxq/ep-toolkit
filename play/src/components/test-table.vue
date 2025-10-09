@@ -5,7 +5,9 @@ defineOptions({
 </script>
 
 <template>
-  <div class="test-table__container">this is test-table</div>
+  <div class="test-table__container">
+    <c-table :test="1" />
+  </div>
 </template>
 
 <style scoped lang="scss">

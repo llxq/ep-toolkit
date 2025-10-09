@@ -3,6 +3,16 @@ import { onUnmounted, type Ref, unref, watchPostEffect } from "vue";
 
 /**
  * 监听元素的宽高变化（支持 ResizeObserver，不支持时降级为 window.resize）
+ * @example
+ * const { onResize, stopResize } = useResizeObserver();
+ * onResize(() => {
+ *   console.log("resize");
+ * });
+ * onResize(() => {
+ *   console.log("resize");
+ * });
+ * // stop all events
+ * stopResize();
  */
 export const useResizeObserver = () => {
   let observer: ResizeObserver | null = null;

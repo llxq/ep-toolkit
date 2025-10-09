@@ -106,6 +106,41 @@ const getListenerName = (event: string) => {
   return `on${firstChar.toUpperCase() + rest.join("")}`;
 };
 
+/**
+ * 通过函数式方式打开一个弹框
+ * @example
+ * ```xxxDialog
+ * <template>
+ *   <el-dialog v-model="dialogVisible" @dialog:confirm="confirm" @dialog:cancel="cancel">
+ *     this is xxxDialog
+ *   </el-dialog>
+ * </template>
+ *
+ * <script setup lang="ts">
+ *   import { ref } from "vue";
+ *
+ *   const emit = defineEmits(["dialog:confirm", "dialog:cancel"]);
+ *
+ *   const dialogVisible = ref(false);
+ *
+ *   const confirm = () => {
+ *     emit("dialog:confirm");
+ *   };
+ *   const cancel = () => {
+ *     emit("dialog:cancel");
+ *   };
+ * </script>
+ * ```
+ *
+ * import xxxDialog from "xxxDialog.vue";
+ *
+ * const { openDialog } = useOpenDialog();
+ * openDialog(xxxDialog, {xxProp: 1}).then(() => {
+ *   console.log("close to confirm");
+ * }).catch(() => {
+ *   console.log("close to cancel");
+ * });
+ */
 export const useOpenDialog = () => {
   const checkAppContext = getCurrentInstance()?.appContext;
 

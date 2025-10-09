@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json.schemastore.org/web-types",
+  "framework": "vue",
+  "name": "z-ui-pc",
+  "version": "1.0.0",
+  "js-types-syntax": "typescript",
+  "description-markup": "markdown",
+  "contributions": {
+    "html": {
+      "attributes": [
+        {
+          "name": "v-ellipsis",
+          "description": "## 文本溢出指令 \n鼠标经过时，溢出文本展示tooltip，未溢出则不展示",
+          "type": ["string", "object"],
+          "arguments": [
+            {
+              "name": "content",
+              "description": "显示在tooltip中的内容。如果没有提供，则默认使用元素的文本内容。",
+              "type": "string"
+            },
+            {
+              "name": "line",
+              "description": "设置内容超出多少行才隐藏，默认1",
+              "type": "number"
+            },
+            {
+              "name": "tipWidth",
+              "description": "设置tooltip的宽度。默认自适应",
+              "type": "string"
+            }
+          ],
+          "modifiers": [
+            {
+              "name": "dark",
+              "description": "将tooltip效果设置为暗色。"
+            },
+            {
+              "name": "light",
+              "description": "将tooltip效果设置为亮色。"
+            },
+            {
+              "name": "top",
+              "description": "将tooltip定位在元素的顶部。"
+            },
+            {
+              "name": "bottom",
+              "description": "将tooltip定位在元素的底部。"
+            },
+            {
+              "name": "left",
+              "description": "将tooltip定位在元素的左侧。"
+            },
+            {
+              "name": "right",
+              "description": "将tooltip定位在元素的右侧。"
+            }
+          ]
+        },
+        {
+          "name": "v-paste-trim",
+          "description": "## el-input 粘贴空格过滤 \n粘贴内容到 el-input 的时候，会自动把前后空格去掉",
+          "type": "string"
+        },
+        {
+          "name": "v-trim-emoji",
+          "description": "## el-input emoji表情过滤 \n输入/粘贴emoji表情到 el-input 的时候，会自动把emoji表情过滤掉。\n指令依赖于第三方库 [emoji-regex](https://www.npmjs.com/package/emoji-regex)",
+          "type": "string"
+        }
+      ]
+    }
+  }
+}

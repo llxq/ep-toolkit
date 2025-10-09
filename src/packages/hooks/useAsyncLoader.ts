@@ -6,6 +6,19 @@ import { type Ref, ref, watchPostEffect } from "vue";
  * 用于优化异步加载体验
  * @param initialValue 默认值
  * @param isFull 是否为全屏加载
+ * @returns [loading, execute]
+ * @example
+ * const [loading, execute] = useAsyncLoader();
+ * execute(async () => {
+ *   // 支持异步或同步
+ *   await xxx();
+ * });
+ * // 也可以等待loading关闭完成执行某些事情
+ * await execute(async () => {
+ *   await xxx();
+ * });
+ * // do something
+ * console.log("loading closed");
  */
 export function useAsyncLoader(
   initialValue?: boolean,

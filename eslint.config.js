@@ -1,13 +1,12 @@
-// eslint.config.js
 import js from "@eslint/js";
-import tseslint from "typescript-eslint";
+import typescript from "typescript-eslint";
 import vue from "eslint-plugin-vue";
 import prettier from "eslint-plugin-prettier";
 import globals from "globals";
 
 export default [
   js.configs.recommended,
-  ...tseslint.configs.recommended,
+  ...typescript.configs.recommended,
   ...vue.configs["flat/recommended"],
   {
     files: ["**/*.ts", "**/*.tsx", "**/*.vue"],
@@ -28,7 +27,7 @@ export default [
     },
     plugins: {
       vue,
-      "@typescript-eslint": tseslint.plugin,
+      "@typescript-eslint": typescript.plugin,
       prettier,
     },
     rules: {
@@ -56,6 +55,14 @@ export default [
           message: "can only use console.error or console.warn",
         },
       ],
+      "@typescript-eslint/no-unused-expressions": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/consistent-type-imports": "error",
+      "vue/singleline-html-element-content-newline": "off",
+      "vue/max-attributes-per-line": "off",
     },
+  },
+  {
+    ignores: ["**/*.d.ts", "dist/**/*"],
   },
 ];

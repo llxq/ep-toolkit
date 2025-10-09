@@ -2,23 +2,46 @@
   "name": "ep-kit",
   "version": "0.0.0",
   "type": "module",
+  "module": "dist/es/index.js",
+  "types": "dist/es/index.d.ts",
+  "style": "dist/index.css",
+  "files": [
+    "dist",
+    "package.json",
+    "README.md",
+    "LICENSE",
+    "web-types.json"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/es/index.js",
+      "types": "./dist/es/index.d.ts"
+    },
+    "./dist/index.css": "./dist/index.css"
+  },
   "scripts": {
     "dev": "npm run dev --prefix=play",
+    "build:dev": "cross-env NODE_ENV=development vite build --watch",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
     "prepare": "husky"
   },
   "dependencies": {
     "element-plus": "^2.11.4",
-    "vue": "^3.5.18",
+    "emoji-regex": "^10.5.0",
+    "vue": "^3.5.22",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@eslint/js": "^9.37.0",
+    "@microsoft/api-extractor": "^7.53.1",
+    "@types/node": "^24.7.0",
     "@typescript-eslint/eslint-plugin": "^8.45.0",
     "@typescript-eslint/parser": "^8.45.0",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vitejs/plugin-vue-jsx": "^5.1.1",
     "@vue/tsconfig": "^0.7.0",
+    "cross-env": "^10.1.0",
     "eslint": "^9.36.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
@@ -30,14 +53,16 @@
     "sass-embedded": "^1.93.2",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.45.0",
+    "unplugin-dts": "^1.0.0-beta.6",
     "vite": "^7.1.2",
     "vue-eslint-parser": "^10.2.0",
-    "vue-tsc": "^3.0.5"
+    "vue-tsc": "^3.0.9"
   },
   "lint-staged": {
     "*.{vue,js,ts,jsx,tsx,md,json}": [
       "eslint --fix",
       "prettier --write"
     ]
-  }
+  },
+  "web-types": "./web-types.json"
 }

@@ -7,6 +7,16 @@ import {
 
 /**
  * 创建一个监听事件
+ * @example
+ * const { on, stops } = useListenEvent();
+ * on("click", () => {
+ *   console.log("click");
+ * });
+ * on("click", () => {
+ *   console.log("click");
+ * });
+ * // stop all events
+ * stops();
  */
 export const useListenEvent = <T extends HTMLElement>() => {
   const listenElementRef = useTemplateRef<T>("listenElementRef");

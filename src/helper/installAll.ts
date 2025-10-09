@@ -1,11 +1,21 @@
 import type { TSFCWithInstall } from "@/helper/withInstall.ts";
 import * as allComponents from "@/packages/components";
+import { initEpKitDirectives } from "@/packages/directives";
 import type { App, Component, Plugin } from "vue";
 
 export type TEpKitComponentKey = keyof typeof allComponents;
 
 export interface IEpKitConfig {
+  /**
+   * 需要安装的组件
+   * @default Object.keys(allComponents)
+   */
   components?: TEpKitComponentKey[];
+  /**
+   * 是否注入自定义指令
+   * @default true
+   */
+  injectDirective?: boolean;
 }
 
 /**
@@ -26,4 +36,8 @@ export const installAll = (app: App, config?: IEpKitConfig) => {
       console.error(`组件${componentKey}不存在`);
     }
   });
+  const injectDirective = config?.injectDirective ?? true;
+  if (injectDirective) {
+    app.use(initEpKitDirectives);
+  }
 };

@@ -1,7 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import TestForm from "./components/test-form.vue";
+</script>
 
 <template>
-  <div>123</div>
+  <test-form />
 </template>
 
 <style scoped lang="scss"></style>
