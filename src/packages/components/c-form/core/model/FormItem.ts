@@ -38,7 +38,7 @@ export class FormItem<T extends TObj = TObj, U extends TObj = TObj>
 
   public className?: string;
 
-  public formItemAttrs?: Partial<FormItemProps> & IStyle;
+  public elFormItemAttrs?: Partial<FormItemProps> & IStyle;
 
   public elColAttrs?: Partial<ColProps>;
 
@@ -63,7 +63,7 @@ export class FormItem<T extends TObj = TObj, U extends TObj = TObj>
   /**
    * 是否展示该列
    */
-  public show = false;
+  public show = true;
 
   /**
    * 默认值，默认从策略里面获取，也可自定义。如未定义默认为 void 0
@@ -135,28 +135,8 @@ export class FormItem<T extends TObj = TObj, U extends TObj = TObj>
     return isHidden && this.show;
   }
 
-  public parseColumn(hiddenProps: Set<string>): void {
+  public initFormItemVisible(hiddenProps: Set<string>): void {
     this.visible = !hiddenProps.has(this.prop as string);
-  }
-
-  /**
-   * 处理事件处理函数，为了统一触发 change 事件。
-   * @param changeCallBack
-   */
-  public parseColumnEvent(changeCallBack: (...args: TAllType[]) => void) {
-    const { on = {}, changeEvent = "change" } = this;
-    return {
-      ...on,
-      [changeEvent]: (...args: Parameters<(typeof on)[typeof changeEvent]>) => {
-        if (Reflect.has(on, changeEvent)) {
-          const event = Reflect.get(on, changeEvent);
-          if (isFunction(event)) {
-            event(...args);
-          }
-        }
-        changeCallBack(...args);
-      },
-    };
   }
 
   public addStopper(fn: () => void): void {

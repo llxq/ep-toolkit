@@ -99,7 +99,12 @@ export class FormBuilder<T extends TObj = TObj> {
     columns: (IFormItem<T> | FormItem<T>)[],
     config: ICFormProps = {},
   ): void {
-    this.formConfigManager.init(merge({ startLoading: true }, config));
+    this.formConfigManager.init(
+      merge(
+        { startLoading: true, useRowLayout: false } as Partial<ICFormProps>,
+        config,
+      ),
+    );
     if (columns.length) {
       this.formDataStore.init(
         this.formItemManager.init(this.parseFormItem(columns)),
@@ -137,6 +142,15 @@ export class FormBuilder<T extends TObj = TObj> {
    */
   public getFormatData<X extends TObj = T>(): X {
     return this.formDataStore.getFormatData<X>(this.formItems);
+  }
+
+  /**
+   * 发送事件
+   * @param event
+   */
+  public async emit(event: EFormEvent): Promise<FormBuilder<T>> {
+    await this.eventBus.emit(event);
+    return this;
   }
 
   /**

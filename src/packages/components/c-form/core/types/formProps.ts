@@ -19,7 +19,7 @@ export interface ICFormProps extends Partial<Omit<FormProps, "model">> {
   /**
    * el-row 对应的属性
    */
-  rowAttrs?: Partial<RowProps> & IStyle;
+  elRowAttrs?: Partial<RowProps> & IStyle;
   /**
    * modelValue
    */
@@ -71,7 +71,7 @@ export interface IFormItem<T extends TObj = TObj> extends IStyle {
   /**
    * form-item 属性
    */
-  formItemAttrs?: Partial<FormItemProps> & IStyle;
+  elFormItemAttrs?: Partial<FormItemProps> & IStyle;
   /**
    * el-col 的配置
    */
