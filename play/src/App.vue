@@ -4,6 +4,7 @@ import TestForm from "./components/test-form.vue";
 
 <template>
   <test-form />
+  <CAutoTooltip />
 </template>
 
 <style scoped lang="scss"></style>

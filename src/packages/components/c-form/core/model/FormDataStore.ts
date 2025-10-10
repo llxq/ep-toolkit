@@ -1,6 +1,7 @@
 import type { FormItem } from "@/packages/components/c-form/core/model/FormItem.ts";
 import type { IFormItem } from "@/packages/components/c-form/core/types/formProps.ts";
 import { cloneDeep, isPlainObject, set } from "lodash";
+import { unref } from "vue";
 
 /**
  * 表单数据存储
@@ -10,6 +11,16 @@ export class FormDataStore<T extends TObj> {
    * 表单数据
    */
   public formData: T = {} as T;
+
+  /**
+   * 原始表单数据
+   */
+  public originFormData: T = {} as T;
+
+  /**
+   * 数据是否发生变更
+   */
+  public isUpdate = false;
 
   /**
    * 初始化 formData
@@ -78,5 +89,23 @@ export class FormDataStore<T extends TObj> {
       }
       return result;
     }, {} as X);
+  }
+
+  /**
+   * 更新原始数据，用于重置恢复数据
+   */
+  public updateOriginFormData(): void {
+    if (!this.isUpdate) {
+      this.originFormData = unref(cloneDeep(this.formData));
+    }
+    this.isUpdate = true;
+  }
+
+  /**
+   * 重置
+   */
+  public reset(): void {
+    this.formData = cloneDeep(this.originFormData);
+    this.isUpdate = false;
   }
 }

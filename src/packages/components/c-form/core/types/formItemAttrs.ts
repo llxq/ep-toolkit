@@ -39,7 +39,7 @@ export interface ICFormDateAttrs extends DatePickerProps {
   useDefaultTimeToDay?: boolean;
 }
 
-export interface IGroupSelectOptions {
+export interface ISelectInputGroupOption {
   /**
    * select 选中的对应的 input 的占位符
    */
@@ -62,7 +62,7 @@ export type ICFormSelectInputGroupAttrs = {
   /**
    * select 的 options
    */
-  options: TOptionsReturn<IGroupSelectOptions>;
+  options: TOptionsReturn<ISelectInputGroupOption>;
   /**
    * select 的内容修改是否不触发 change 事件
    * @default false
@@ -142,7 +142,7 @@ export interface ICFormDateRangeAndSelectGroupAttrs {
   /**
    * select 的 options
    */
-  options: TOptionsReturn<IGroupSelectOptions>;
+  options: TOptionsReturn<ISelectInputGroupOption>;
   /**
    * select options
    */

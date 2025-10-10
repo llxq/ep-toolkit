@@ -1,5 +1,5 @@
 import { withInstallComponent } from "@/helper/withInstall.ts";
 
-import ZAutoTooltip from "./index.vue";
-const installer = withInstallComponent(ZAutoTooltip, "ZAutoTooltip");
+import CAutoTooltip from "./index.vue";
+const installer = withInstallComponent(CAutoTooltip, "CAutoTooltip");
 export { installer as default };

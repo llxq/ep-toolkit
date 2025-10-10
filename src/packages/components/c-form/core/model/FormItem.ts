@@ -30,7 +30,7 @@ export class FormItem<T extends TObj = TObj, U extends TObj = TObj>
 
   public tag!: EFormComponentType;
 
-  public label!: string;
+  public label!: string | ((formItem: FormItem) => string);
 
   public attrs?: Partial<U>;
 

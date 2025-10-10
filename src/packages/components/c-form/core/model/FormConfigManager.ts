@@ -31,7 +31,7 @@ export class FormConfigManager {
    * 获取 row 的属性
    */
   public get getRowAttrs(): Partial<RowProps> & IStyle {
-    return { gutter: 0, ...(this.config.elRowAttrs ?? {}) };
+    return { gutter: 24, ...(this.config.elRowAttrs ?? {}) };
   }
 
   /**

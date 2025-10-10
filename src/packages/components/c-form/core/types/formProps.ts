@@ -1,4 +1,5 @@
 import type { EFormComponentType } from "@/packages/components/c-form/core/constants/enum.ts";
+import type { FormItem } from "@/packages/components/c-form/core/model/FormItem.ts";
 import type {
   IStyle,
   TEvent,
@@ -12,12 +13,18 @@ import type {
 
 export interface ICFormProps extends Partial<Omit<FormProps, "model">> {
   /**
+   * 是否自动初始化
+   * @default true
+   */
+  isAutoInit?: boolean;
+  /**
    * 是否使用 row 布局
    * @default true
    */
   useRowLayout?: boolean;
   /**
    * el-row 对应的属性
+   * @default { gutter: 24 } 默认使用 column-gap 设置间距
    */
   elRowAttrs?: Partial<RowProps> & IStyle;
   /**
@@ -47,7 +54,7 @@ export interface IFormItem<T extends TObj = TObj> extends IStyle {
   /**
    * label名称
    */
-  label: string;
+  label: string | ((formItem: FormItem) => string);
   /**
    * prop，用于数据绑定
    */

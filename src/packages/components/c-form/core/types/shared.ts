@@ -20,3 +20,5 @@ export type TOptions<T extends TObj = TObj> = ({
 export type TOptionsReturn<T extends TObj = TObj> =
   | TOptions<T>
   | (() => TOptions<T> | Promise<TOptions<T>>);
+
+export type TTriggerEventName = "search" | "change" | "all";

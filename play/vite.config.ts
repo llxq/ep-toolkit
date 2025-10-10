@@ -5,11 +5,12 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueJsx()],
+  plugins: [vue({ include: [/\.vue$/, /\.md$/] }), vueJsx()],
   resolve: {
     alias: {
       "ep-kit": resolve(__dirname, "../src/index"),
       "@": resolve(__dirname, "../src"),
+      "@play": resolve(__dirname, "./src"),
     },
   },
 });

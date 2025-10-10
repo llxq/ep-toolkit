@@ -1,4 +1,5 @@
 import { EFormEvent } from "@/packages/components/c-form/core/constants/enum.ts";
+import { resetValueStrategy } from "@/packages/components/c-form/core/helper/resetValueStrategy.ts";
 import { FormConfigManager } from "@/packages/components/c-form/core/model/FormConfigManager.ts";
 import { FormDataStore } from "@/packages/components/c-form/core/model/FormDataStore.ts";
 import { FormInstanceManager } from "@/packages/components/c-form/core/model/FormInstanceManager.ts";
@@ -8,14 +9,20 @@ import type {
   ICFormProps,
   IFormItem,
 } from "@/packages/components/c-form/core/types/formProps.ts";
+import type { TTriggerEventName } from "@/packages/components/c-form/core/types/shared.ts";
 import { EventBus } from "@/packages/utils";
-import { isEmpty, merge } from "lodash";
+import { isEmpty, isFunction, merge } from "lodash";
 
 /**
  * 表单构造器，用于构造表单scheme和表单的各个事件等处理。
  */
 export class FormBuilder<T extends TObj = TObj> {
   private readonly eventBus = new EventBus();
+
+  /**
+   * 是否初始化完成
+   */
+  public isInit = false;
 
   /**
    * 用于收集自动隐藏的字段
@@ -62,7 +69,8 @@ export class FormBuilder<T extends TObj = TObj> {
     columns?: (IFormItem<T> | FormItem<T>)[],
     config: ICFormProps = {},
   ) {
-    this.init(columns ?? [], config);
+    const isAutoInit = config.isAutoInit ?? true;
+    isAutoInit && this.init(columns ?? [], config);
   }
 
   /**
@@ -110,6 +118,7 @@ export class FormBuilder<T extends TObj = TObj> {
         this.formItemManager.init(this.parseFormItem(columns)),
       );
     }
+    this.isInit = true;
   }
 
   /**
@@ -158,9 +167,70 @@ export class FormBuilder<T extends TObj = TObj> {
    * @param callBack
    */
   public onChange(callBack: (formData: T) => void): void {
+    this.formDataStore.updateOriginFormData();
     this.eventBus.on(EFormEvent.CHANGE, () => {
-      /* 去除相关引用，只有通过 formBuilder 实例获取的变量才会更新视图 */
       callBack(this.getFormatData<T>());
     });
+  }
+
+  /**
+   * 表单查询事件
+   */
+  public onSearch(callBack: (formData: T) => void): void {
+    this.eventBus.on(EFormEvent.SEARCH, () => {
+      callBack(this.getFormatData<T>());
+    });
+  }
+
+  /**
+   * 根据传递进来的值对formData的值进行重置，如果key不存在则默认 undefined
+   * @param trigger 是否触发查询/change
+   * @param model 解析模式，auto 根据默认值数据类型进行处理，empty：都重置为 undefined，custom 自定义处理；
+   * @param resetCallBack 自定义解析器；解析模式为 auto 的情况下，有些既定规则是不会走callBack的。custom 则全部走自定义解析器。如果在 custom 或者 auto 的情况下没有设置自定义解析器在，则默认都是 undefined
+   */
+  public reset(
+    trigger: TTriggerEventName | TTriggerEventName[] = "all",
+    model: "auto" | "empty" | "custom" = "auto",
+    resetCallBack?: (
+      prop: string | keyof T,
+      value?: TAllType | T[keyof T],
+    ) => TAllType,
+  ) {
+    const length = this.formItems.length;
+    for (let i = 0; i < length; ++i) {
+      const { tag, prop } = this.formItems[i];
+      if (tag && prop) {
+        const originValue = Reflect.get(this.formData, prop);
+        if (model === "empty") {
+          this.updateFormData(prop, void 0);
+          continue;
+        }
+        // 如果 auto 并且没有对应的策略则走 原始值
+        const _parser =
+          resetCallBack ||
+          (() => Reflect.get(this.formDataStore.originFormData, prop));
+        if (model === "custom") {
+          this.updateFormData(prop, _parser(prop, originValue));
+          continue;
+        }
+        if (model === "auto") {
+          const defaultParser = Reflect.get(resetValueStrategy, tag);
+          // 特殊处理的组件
+          if (defaultParser && isFunction(defaultParser)) {
+            this.updateFormData(prop, defaultParser(originValue));
+          } else {
+            this.updateFormData(prop, _parser(prop, originValue));
+          }
+        }
+      }
+    }
+    const triggerList = Array.isArray(trigger) ? trigger : [trigger];
+    const isAll = triggerList.includes("all");
+    if (triggerList.includes("change") || isAll) {
+      void this.emit(EFormEvent.CHANGE);
+    }
+    if (triggerList.includes("search") || isAll) {
+      void this.emit(EFormEvent.SEARCH);
+    }
   }
 }

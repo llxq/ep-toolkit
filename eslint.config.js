@@ -23,6 +23,10 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.node,
+        TAllType: "readonly",
+        TUndefinable: "readonly",
+        TObj: "readonly",
+        TNullable: "readonly",
       },
     },
     plugins: {
@@ -60,9 +64,11 @@ export default [
       "@typescript-eslint/consistent-type-imports": "error",
       "vue/singleline-html-element-content-newline": "off",
       "vue/max-attributes-per-line": "off",
+      "vue/no-required-prop-with-default": "off",
+      "vue/html-self-closing": "off",
     },
   },
   {
-    ignores: ["**/*.d.ts", "dist/**/*"],
+    ignores: ["**/*.d.ts", "dist/**/*", "**/*.json"],
   },
 ];

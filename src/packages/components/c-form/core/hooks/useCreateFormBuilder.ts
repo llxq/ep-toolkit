@@ -35,11 +35,14 @@ export interface ICreateFormBuilderConfig extends ICFormProps {
  *   ]
  * );
  */
-export const useCreateFormBuilder = <T extends TObj>(
-  fields?: (IFormItem<T> | FormItem<T>)[],
+export const useCreateFormBuilder = <T extends TObj = TObj>(
+  fields?: (IFormItem | FormItem)[],
   config?: ICreateFormBuilderConfig,
 ): ICreateFormBuilderReturn<T> => {
-  const builder = new FormBuilder<T>(fields, config);
+  const builder = new FormBuilder<T>(
+    fields as (IFormItem<T> | FormItem<T>)[],
+    config,
+  );
   const formBuilder = ref<FormBuilder<T>>(builder) as unknown as Ref<
     FormBuilder<T>
   >;
@@ -95,13 +98,16 @@ export const useCreateFormBuilder = <T extends TObj>(
  * @param config
  *  */
 export const useDynamicCreateFormBuilder = <T extends TObj = TObj>(
-  getDynamicFields?: (
-    formBuilder: FormBuilder<T>,
-  ) => (IFormItem<T> | FormItem<T>)[],
+  getDynamicFields?: (formBuilder: FormBuilder<T>) => (IFormItem | FormItem)[],
   config?: ICreateFormBuilderConfig,
 ): ICreateFormBuilderReturn<T> => {
-  const { formBuilder } = useCreateFormBuilder<T>([], config);
-  formBuilder.init(getDynamicFields?.(formBuilder) ?? []);
+  const { formBuilder } = useCreateFormBuilder<T>([], {
+    ...config,
+    isAutoInit: false,
+  });
+  formBuilder.init(
+    (getDynamicFields?.(formBuilder) ?? []) as (IFormItem<T> | FormItem<T>)[],
+  );
 
   return {
     formBuilder,

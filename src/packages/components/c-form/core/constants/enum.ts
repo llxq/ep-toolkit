@@ -71,4 +71,8 @@ export enum EFormEvent {
    * 表单组件值发生变化
    */
   CHANGE = "change",
+  /**
+   * 触发查询
+   */
+  SEARCH = "search",
 }

@@ -2,10 +2,10 @@
 import { ref } from "vue";
 
 defineOptions({
-  name: "ZAutoTooltip",
+  name: "CAutoTooltip",
 });
 
-import { tooltipConfig } from "./zAutoTooltipState";
+import { tooltipConfig } from "./cAutoTooltipState";
 
 const triggerRef = ref({
   getBoundingClientRect() {

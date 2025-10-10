@@ -1,3 +1,4 @@
+import { DATE_SHORTCUTS } from "@/packages/components/c-form/core/constants/date.ts";
 import { EFormComponentType } from "@/packages/components/c-form/core/constants/enum.ts";
 import type { TKeyofCustomFormComponentType } from "@/packages/components/c-form/core/helper/createCustomCFormItem.ts";
 import {
@@ -88,6 +89,8 @@ export const defaultParseStrategy: Record<
         validateEvent: true,
         /* 默认选择时间的时候从开始时间的 00:00 到结束时间的 23:59 */
         useDefaultTimeToDay: true,
+        /* 默认都带上快捷时间 */
+        shortcuts: DATE_SHORTCUTS,
       }),
     ),
   [EFormComponentType.GROUP_SELECT_INPUT]: (field) =>
@@ -159,7 +162,7 @@ export const defaultParseStrategy: Record<
         },
         separator: "至",
         min: 0,
-        max: 99999999,
+        max: Number.MAX_VALUE,
       } as ICFormNumberRangeAttrs),
     );
   },

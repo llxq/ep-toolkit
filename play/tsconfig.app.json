@@ -13,7 +13,8 @@
     "noUncheckedSideEffectImports": true,
     "paths": {
       "ep-kit": ["../src/index"],
-      "@/*": ["../src/*"]
+      "@/*": ["../src/*"],
+      "@play": ["./src/*"]
     },
     "jsx": "preserve",
     "jsxImportSource": "vue"
