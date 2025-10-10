@@ -27,11 +27,11 @@ export class FormItemManager<T extends TObj> {
    * @param formData
    * @param hiddenProps
    */
-  public getShowColumns(formData: T, hiddenProps: Set<string>): FormItem<T>[] {
+  public getShowFormItems(
+    formData: T,
+    hiddenProps: Set<string>,
+  ): FormItem<T>[] {
     this.formItems.forEach((column) => column.initFormItemVisible(hiddenProps));
-    return sortBy(
-      this.formItems.filter((column) => column.validateIsHidden(formData)),
-      "sort",
-    );
+    return this.formItems.filter((column) => column.validateIsHidden(formData));
   }
 }

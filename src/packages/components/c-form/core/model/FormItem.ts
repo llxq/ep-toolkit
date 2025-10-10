@@ -58,12 +58,10 @@ export class FormItem<T extends TObj = TObj, U extends TObj = TObj>
     column: IFormItem<T>,
   ) => TNullableUndefinable<TObj>;
 
-  public visible = true;
-
   /**
    * 是否展示该列
    */
-  public show = true;
+  public visible = true;
 
   /**
    * 默认值，默认从策略里面获取，也可自定义。如未定义默认为 void 0
@@ -100,7 +98,7 @@ export class FormItem<T extends TObj = TObj, U extends TObj = TObj>
    */
   public initProps(props: Partial<IFormItem<T>>) {
     if (!props.prop) {
-      this.show = true;
+      this.visible = true;
     }
     this.prop = props.prop || this.prop;
     this.update(props);
@@ -129,14 +127,16 @@ export class FormItem<T extends TObj = TObj, U extends TObj = TObj>
    * @param formData
    */
   public validateIsHidden<F extends TObj>(formData: F): boolean {
-    const isHidden = isFunction(this.hidden)
+    const isShow = isFunction(this.hidden)
       ? !this.hidden(formData, this)
       : !this.hidden;
-    return isHidden && this.show;
+    return isShow && this.visible;
   }
 
   public initFormItemVisible(hiddenProps: Set<string>): void {
-    this.visible = !hiddenProps.has(this.prop as string);
+    if (this.prop) {
+      this.visible = !hiddenProps.has(this.prop as string);
+    }
   }
 
   public addStopper(fn: () => void): void {

@@ -50,3 +50,12 @@ export const formatPasteText = (
     triggerEvent(inputElement);
   }
 };
+
+/**
+ * 判断一个元素是否隐藏
+ */
+export const isHiddenNode = (element?: HTMLElement) =>
+  !element ||
+  !element.offsetParent ||
+  !element.offsetWidth ||
+  getComputedStyle(element).display === "none";

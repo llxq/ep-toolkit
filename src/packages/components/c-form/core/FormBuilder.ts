@@ -54,8 +54,11 @@ export class FormBuilder<T extends TObj = TObj> {
   /**
    * 获取当前可展示的列
    */
-  public get getShowColumns(): FormItem<T>[] {
-    return this.formItemManager.getShowColumns(this.formData, this.hiddenProps);
+  public get getShowFormItems(): FormItem<T>[] {
+    return this.formItemManager.getShowFormItems(
+      this.formData,
+      this.hiddenProps,
+    );
   }
 
   /**

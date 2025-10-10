@@ -1,5 +1,4 @@
-import type { ElForm } from "element-plus";
-import type { FormItemProp } from "element-plus/es/components/form/src/form-item";
+import type { ElForm, ElFormItem } from "element-plus";
 import { type ComponentPublicInstance, type Ref, unref } from "vue";
 
 /**
@@ -37,20 +36,16 @@ export class FormInstanceManager<T = TObj> {
   }
 
   /**
-   * 表单/字段重置
-   * @param props
-   */
-  public reset(props?: FormItemProp): void {
-    return this.instance?.resetFields(props);
-  }
-
-  /**
    * 获取某个组件的实例
    * @param prop
    */
-  public getFormItemByProp<U>(prop: keyof T): TUndefinable<U> {
+  public getFormItemInstanceByProp(
+    prop: keyof T,
+  ): TUndefinable<InstanceType<typeof ElFormItem>> {
     return this.componentInstanceRefs
-      ? (Reflect.get(this.componentInstanceRefs, prop) as TUndefinable<U>)
+      ? (Reflect.get(this.componentInstanceRefs, prop) as TUndefinable<
+          InstanceType<typeof ElFormItem>
+        >)
       : void 0;
   }
 }

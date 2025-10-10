@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import TestForm from "./components/test-form.vue";
+import TestSearchForm from "@play/components/test-search-form.vue";
 </script>
 
 <template>
-  <test-form />
+  <test-search-form />
   <CAutoTooltip />
 </template>
 

@@ -10,7 +10,7 @@ import {
 } from "vue";
 
 export const useCForm = (formBuilder: FormBuilder) => {
-  const cFormRef = ref<InstanceType<typeof ElForm>>();
+  const formRef = ref<InstanceType<typeof ElForm>>();
 
   const componentInstanceRefs = ref<TObj<string, ComponentPublicInstance>>({});
   const collectionRef = (_ref: unknown, field: FormItem) => {
@@ -21,18 +21,18 @@ export const useCForm = (formBuilder: FormBuilder) => {
   };
 
   const stopWatch = watch(
-    () => formBuilder.getShowColumns,
+    () => formBuilder.getShowFormItems,
     () => {
-      if (cFormRef.value && componentInstanceRefs.value) {
-        formBuilder.formInstanceManager.init(cFormRef, componentInstanceRefs);
+      if (formRef.value && Object.keys(componentInstanceRefs.value).length) {
+        formBuilder.formInstanceManager.init(formRef, componentInstanceRefs);
       }
     },
     { flush: "post", deep: true },
   );
 
   const stopEffect = watchPostEffect(() => {
-    if (cFormRef.value && componentInstanceRefs.value) {
-      formBuilder.formInstanceManager.init(cFormRef, componentInstanceRefs);
+    if (formRef.value && componentInstanceRefs.value) {
+      formBuilder.formInstanceManager.init(formRef, componentInstanceRefs);
     }
   });
 
@@ -42,7 +42,7 @@ export const useCForm = (formBuilder: FormBuilder) => {
   });
 
   return {
-    cFormRef,
+    formRef,
     collectionRef,
   };
 };

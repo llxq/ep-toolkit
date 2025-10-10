@@ -30,7 +30,7 @@ const { formBuilder } = defineProps<{
 
 const { formConfigManager, config } = formBuilder;
 
-const { cFormRef, collectionRef } = useCForm(formBuilder);
+const { formRef, collectionRef } = useCForm(formBuilder);
 
 const renderFormItem = (formItem: FormItem) => {
   const { elFormItemAttrs, prop, label, className } = formItem;
@@ -41,6 +41,7 @@ const renderFormItem = (formItem: FormItem) => {
       {...elFormItemAttrs}
       prop={prop}
       class={className}
+      ref={(currentRef: unknown) => collectionRef(currentRef, formItem)}
       v-slots={{
         label: () =>
           isFunction(label)
@@ -55,28 +56,27 @@ const renderFormItem = (formItem: FormItem) => {
           emit("change", ...args);
         })}
         v-model={formBuilder.formData[prop]}
-        ref={(currentRef) => collectionRef(currentRef, formItem)}
       ></RenderComponent>
     </el-form-item>
   );
 };
 const FormContentComponent = () => {
   if (!config.useRowLayout) {
-    const renderFormItems = formBuilder.getShowColumns.map(renderFormItem);
+    const renderFormItems = formBuilder.getShowFormItems.map(renderFormItem);
     if (slots.endFormItem) {
       renderFormItems.push(slots.endFormItem());
     }
     return renderFormItems;
   }
   // 拿到所有的 span,获取余数
-  const remainder = calculateRemainingRowSpan(formBuilder.getShowColumns);
+  const remainder = calculateRemainingRowSpan(formBuilder.getShowFormItems);
   return (
     <el-row
       class="c-form__row"
       {...formConfigManager.getRowAttrs}
       style={config?.elRowAttrs?.style}
     >
-      {formBuilder.getShowColumns.map((formItem) => (
+      {formBuilder.getShowFormItems.map((formItem) => (
         <el-col
           {...formItem.elColAttrs}
           key={formItem.prop}
@@ -94,6 +94,10 @@ const FormContentComponent = () => {
     </el-row>
   );
 };
+
+defineExpose({
+  formRef,
+});
 </script>
 
 <template>
@@ -107,7 +111,7 @@ const FormContentComponent = () => {
     <div v-loading="!formBuilder.isInit" class="c-form__body">
       <el-form
         v-if="formBuilder.isInit"
-        ref="cFormRef"
+        ref="formRef"
         :class="['c-form__form', { 'is-form-layout': !config.useRowLayout }]"
         v-bind="formConfigManager.getFormAttrs"
         :model="formBuilder.formData"
