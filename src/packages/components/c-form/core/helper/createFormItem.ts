@@ -18,11 +18,13 @@ export type TCreateFormItemParams<
   /**
    * 需要渲染的组件
    */
-  tag: T;
+  tag: T | string;
   /**
    * 对应的属性类型
    */
-  attrs?: Partial<IFormComponentAttrs[T]>;
+  attrs?: T extends keyof IFormComponentAttrs
+    ? Partial<IFormComponentAttrs[T]>
+    : TObj;
 };
 
 /**
@@ -60,13 +62,13 @@ export function createFormItem<
   const newProps = isFunctionProps ? props() : props;
   /* FIXME 创建一个新的 FormItem，如果不用 ref 无法做到响应式更新！ */
   const formItem = ref(
-    new FormItem<U, IFormComponentAttrs[T]>(newProps),
+    new FormItem<U, IFormComponentAttrs[T]>(newProps as IFormItem<U>),
   ) as unknown as Ref<FormItem<U, IFormComponentAttrs[T]>>;
   if (isFunctionProps) {
     /* 构建一个副作用用于更新对应的动态props */
     const stopEffect = watchEffect(() => {
       const _newProps = isFunctionProps ? props() : props;
-      formItem.value.initProps(_newProps);
+      formItem.value.initProps(_newProps as IFormItem<U>);
     });
     formItem.value.addStopper(stopEffect);
     /* 如果当前作用域有顶层作用域，在作用域销毁的时候销毁掉当前副作用函数 */

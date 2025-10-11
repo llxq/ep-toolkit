@@ -145,6 +145,19 @@ const { formBuilder } = useCreateFormBuilder<{ test: string }>(
       },
       span: 12,
     }),
+    createFormItem({
+      tag: "div",
+      label: "div",
+      prop: "div",
+      attrs: {
+        style: {
+          width: "100%",
+          height: "20px",
+          background: "red",
+        },
+      },
+      span: 12,
+    }),
   ]),
   {
     useRowLayout,
