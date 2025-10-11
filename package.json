@@ -1,5 +1,5 @@
 {
-  "name": "ep-toolkit",
+  "name": "@chendf/ep-toolkit",
   "version": "0.0.1",
   "type": "module",
   "module": "dist/es/index.js",
