@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import { filterComponentEmptyProps } from "@/packages/components/c-form/core/helper/component.ts";
 import type { TEvent } from "@/packages/components/c-form/core/types/shared.ts";
 import {
   type ICFormComponentModelValueEmit,
   useCFormComponentModelValue,
 } from "@/packages/components/c-form/hooks/useCFormComponentModelValue.ts";
-import type { InputEmits, InputProps } from "element-plus";
-import { computed } from "vue";
+import { useGetPureAttrs } from "@/packages/components/c-form/hooks/useGetPureAttrs.ts";
 import { CircleClose, Search } from "@element-plus/icons-vue";
-import { omit } from "lodash";
+import type { InputEmits, InputProps } from "element-plus";
 
 defineOptions({
   name: "CFormSearchInput",
@@ -20,7 +18,6 @@ export interface ICFormSearchInputProps extends InputProps {
 
 const props = withDefaults(defineProps<ICFormSearchInputProps>(), {
   on: () => ({}),
-  validateEvent: true,
 });
 
 const emit = defineEmits<
@@ -32,9 +29,7 @@ const emit = defineEmits<
 
 const { value } = useCFormComponentModelValue(props, emit);
 
-const inputAttrs = computed(() =>
-  filterComponentEmptyProps(omit(props, ["on", "modelValue"])),
-);
+const [inputAttrs] = useGetPureAttrs(props, ["on", "modelValue"]);
 
 const updateValue = (_value: string) => {
   emit("update:modelValue", _value);

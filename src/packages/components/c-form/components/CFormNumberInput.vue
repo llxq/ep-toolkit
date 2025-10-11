@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { filterComponentEmptyProps } from "@/packages/components/c-form/core/helper/component.ts";
 import type { ICFormNumberInputAttrs } from "@/packages/components/c-form/core/types/formItemAttrs.ts";
 import type { TEvent } from "@/packages/components/c-form/core/types/shared.ts";
 import {
   type ICFormComponentModelValueEmit,
   useCFormComponentModelValue,
 } from "@/packages/components/c-form/hooks/useCFormComponentModelValue.ts";
+import { useGetPureAttrs } from "@/packages/components/c-form/hooks/useGetPureAttrs.ts";
 import { omit } from "lodash";
 import { computed } from "vue";
 
@@ -24,7 +24,6 @@ const props = withDefaults(defineProps<ICFormNumberInputProps>(), {
   modelValue: "",
   clearable: true,
   min: 0,
-  validateEvent: true,
 });
 const emit = defineEmits<
   ICFormComponentModelValueEmit &
@@ -32,11 +31,13 @@ const emit = defineEmits<
 >();
 const { value } = useCFormComponentModelValue(props, emit);
 
-const bindProps = computed(() =>
-  filterComponentEmptyProps(
-    omit(props, ["on", "modelValue", "precision", "max", "min"]),
-  ),
-);
+const [bindProps] = useGetPureAttrs(props, [
+  "on",
+  "modelValue",
+  "precision",
+  "max",
+  "min",
+]);
 
 let originValue = props.modelValue as string | number;
 const updateModelValue = (newValue: number | string): void => {

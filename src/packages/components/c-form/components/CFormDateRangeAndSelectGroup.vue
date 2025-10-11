@@ -159,7 +159,7 @@ const getSelectAttrs = computed(() => ({
       box-shadow:
         -1px 1px 0 0 var(--el-border-color) inset,
         0 -1px 0 0 var(--el-border-color) inset;
-      --el-text-color-regular: var(--app-primary-text-color);
+      --el-text-color-regular: var(--el-text-color-primary);
     }
 
     &.is-reverse {
@@ -178,6 +178,17 @@ const getSelectAttrs = computed(() => ({
         box-shadow:
           1px 1px 0 0 var(--el-border-color) inset,
           0 -1px 0 0 var(--el-border-color) inset;
+      }
+    }
+  }
+
+  &__date {
+    flex: 1;
+
+    :deep() {
+      .el-date-editor.el-input__wrapper {
+        width: 100%;
+        box-sizing: border-box;
       }
     }
   }

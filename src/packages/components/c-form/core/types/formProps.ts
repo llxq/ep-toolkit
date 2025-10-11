@@ -88,7 +88,8 @@ export interface IFormItem<T extends TObj = TObj> extends IStyle {
    */
   on?: TEvent;
   /**
-   * 是否隐藏
+   * 是否隐藏，返回 true 则表示隐藏，返回 false 表示不隐藏
+   * @default false
    */
   hidden?: ((formData: T, column: IFormItem<T>) => boolean) | boolean;
   /**

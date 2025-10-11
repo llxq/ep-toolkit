@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { filterComponentEmptyProps } from "@/packages/components/c-form/core/helper/component.ts";
 import type { ICFormCascaderAttrs } from "@/packages/components/c-form/core/types/formItemAttrs.ts";
 import {
   type ICFormComponentModelValueEmit,
   useCFormComponentModelValue,
 } from "@/packages/components/c-form/hooks/useCFormComponentModelValue.ts";
 import { useCFormComponentOptions } from "@/packages/components/c-form/hooks/useCFormComponentOptions.ts";
-import type { CascaderValue } from "element-plus";
+import { useGetPureAttrs } from "@/packages/components/c-form/hooks/useGetPureAttrs.ts";
+import { type CascaderValue } from "element-plus";
 import type { CascaderProps } from "element-plus/es/components/cascader-panel/src/types";
 import type { CascaderEmits } from "element-plus/lib/components";
 import { cloneDeep, isEqual, omit } from "lodash";
@@ -23,9 +23,6 @@ const props = withDefaults(
   {
     on: () => ({}),
     options: () => [],
-    showAllLevels: true,
-    validateEvent: true,
-    persistent: true,
     props: () => ({}),
   },
 );
@@ -41,9 +38,7 @@ const { value } = useCFormComponentModelValue(props, emit);
 
 const cascaderOn = computed(() => omit(props.on, ["blur", "change"]));
 
-const cascaderAttrs = computed(() =>
-  filterComponentEmptyProps(omit(props, ["on", "options", "modelValue"])),
-);
+const [cascaderAttrs] = useGetPureAttrs(props, ["on", "options", "modelValue"]);
 
 const emitChange = () => {
   emit("change", value.value as CascaderValue);

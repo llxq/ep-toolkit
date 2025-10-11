@@ -12,27 +12,29 @@ import {
 export const useCForm = (formBuilder: FormBuilder) => {
   const formRef = ref<InstanceType<typeof ElForm>>();
 
-  const componentInstanceRefs = ref<TObj<string, ComponentPublicInstance>>({});
-  const collectionRef = (_ref: unknown, field: FormItem) => {
+  const componentParentInstanceMap = ref<TObj<string, ComponentPublicInstance>>(
+    {},
+  );
+  const collectionComponentParentRef = (_ref: unknown, field: FormItem) => {
     const { prop } = field;
     if (prop) {
-      Reflect.set(componentInstanceRefs.value, prop, _ref);
+      Reflect.set(componentParentInstanceMap.value, prop, _ref);
     }
   };
 
   const stopWatch = watch(
     () => formBuilder.getShowFormItems,
     () => {
-      if (formRef.value && Object.keys(componentInstanceRefs.value).length) {
-        formBuilder.formInstanceManager.init(formRef, componentInstanceRefs);
+      if (formRef.value) {
+        formBuilder.formInstanceManager.init(formRef);
       }
     },
     { flush: "post", deep: true },
   );
 
   const stopEffect = watchPostEffect(() => {
-    if (formRef.value && componentInstanceRefs.value) {
-      formBuilder.formInstanceManager.init(formRef, componentInstanceRefs);
+    if (formRef.value) {
+      formBuilder.formInstanceManager.init(formRef);
     }
   });
 
@@ -43,6 +45,7 @@ export const useCForm = (formBuilder: FormBuilder) => {
 
   return {
     formRef,
-    collectionRef,
+    collectionComponentParentRef,
+    componentParentInstanceMap,
   };
 };

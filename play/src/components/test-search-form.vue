@@ -4,87 +4,147 @@ import { createCustomCFormItem } from "@/packages/components/c-form/core/helper/
 import { createFormItem } from "@/packages/components/c-form/core/helper/createFormItem.ts";
 import { useCreateFormBuilder } from "@/packages/components/c-form/core/hooks/useCreateFormBuilder.ts";
 import TestCustomComponent from "@play/components/TestCustomComponent.vue";
+import { repeatFormItems } from "@play/utils/array.ts";
+import { ATTRS_OPTIONS, CASCADER_OPTIONS } from "@play/utils/options.ts";
 
 defineOptions({
   name: "TestForm",
 });
 
-const { formBuilder } = useCreateFormBuilder<{ test: string }>([
-  createFormItem({
-    tag: EFormComponentType.INPUT,
-    label: "test",
-    prop: "test",
-    attrs: {
-      placeholder: "test",
-    },
-    defaultValue: "test",
-  }),
-  createFormItem({
-    tag: EFormComponentType.SEARCH_INPUT,
-    label: "test2",
-    prop: "test2",
-    attrs: {
-      placeholder: "test2",
-    },
-    defaultValue: "test2",
-  }),
-  createFormItem({
-    tag: EFormComponentType.GROUP_SELECT_INPUT,
-    label: "test3",
-    prop: "test3",
-    attrs: {
-      options: [
-        {
-          label: "option1",
-          value: "option1",
-          type: "long",
+const { useRowLayout = true, expandDepth = 1 } = defineProps<{
+  useRowLayout?: boolean;
+  expandDepth?: number;
+}>();
+
+const { formBuilder } = useCreateFormBuilder(
+  repeatFormItems(
+    [
+      createFormItem({
+        tag: EFormComponentType.INPUT,
+        label: "input",
+        prop: "input",
+        attrs: {
+          placeholder: "input",
         },
-        {
-          label: "option2",
-          value: "option2",
-          maxlength: 10,
+        defaultValue: "input",
+        span: 8,
+      }),
+      createFormItem({
+        tag: EFormComponentType.SELECT,
+        label: "select",
+        prop: "select",
+        attrs: {
+          options: ATTRS_OPTIONS,
         },
-      ],
-    },
-  }),
-  createFormItem({
-    tag: EFormComponentType.NUMBER_RANGE,
-    label: "test4",
-    prop: "test4",
-    attrs: {
-      // placeholder: "test4",
-      precision: 2,
-    },
-    // defaultValue: 123,
-  }),
-  createCustomCFormItem({
-    tag: TestCustomComponent,
-    label: "test5",
-    prop: "test5",
-    attrs: {
-      test: "test",
-    },
-  }),
-  createFormItem({
-    tag: EFormComponentType.SELECT,
-    label: "test6",
-    prop: "test6",
-    attrs: {
-      options: [
-        {
-          label: "option1",
-          value: "option1",
-          type: "long",
+        span: 8,
+      }),
+      createFormItem({
+        tag: EFormComponentType.DATE,
+        label: "date",
+        prop: "date",
+        attrs: {
+          placeholder: "date",
         },
-        {
-          label: "option2",
-          value: "option2",
-          maxlength: 10,
+        span: 8,
+      }),
+      createFormItem({
+        tag: EFormComponentType.DATE_RANGE,
+        label: "date_range",
+        prop: "date_range",
+        attrs: {
+          placeholder: "date",
         },
-      ],
-    },
-  }),
-]);
+        defaultValue: ["2022-01-01 00:00:00", "2022-01-02 23:59:59"],
+        span: 8,
+      }),
+      createFormItem({
+        tag: EFormComponentType.SWITCH,
+        label: "switch",
+        prop: "switch",
+        span: 8,
+      }),
+      createFormItem({
+        tag: EFormComponentType.GROUP_SELECT_INPUT,
+        label: "group_select_input",
+        prop: "group_select_input",
+        attrs: {
+          options: ATTRS_OPTIONS,
+        },
+        span: 8,
+      }),
+      createFormItem({
+        tag: EFormComponentType.SEARCH_INPUT,
+        label: "search_input",
+        prop: "search_input",
+        attrs: {
+          placeholder: "search_input",
+        },
+        span: 8,
+      }),
+      createFormItem({
+        tag: EFormComponentType.CASCADER,
+        label: "cascader",
+        prop: "cascader",
+        attrs: {
+          placeholder: "cascader",
+          options: CASCADER_OPTIONS,
+        },
+        span: 8,
+      }),
+      createFormItem({
+        tag: EFormComponentType.NUMBER_RANGE,
+        label: "number_range",
+        prop: "number_range",
+        attrs: {
+          separator: "至",
+          precision: 2,
+        },
+        span: 8,
+      }),
+      createFormItem({
+        tag: EFormComponentType.NUMBER_INPUT,
+        label: "number_input",
+        prop: "number_input",
+        attrs: {
+          precision: 2,
+        },
+        span: 8,
+      }),
+      createFormItem({
+        tag: EFormComponentType.DATE_RANGE_AND_SELECT_GROUP,
+        label: "date_range_and_select_group",
+        prop: "date_range_and_select_group",
+        attrs: {
+          options: ATTRS_OPTIONS,
+        },
+        span: 8,
+      }),
+      createFormItem({
+        tag: EFormComponentType.RADIO,
+        label: "radio",
+        prop: "radio",
+        attrs: {
+          options: ATTRS_OPTIONS,
+        },
+        span: 8,
+      }),
+      createCustomCFormItem({
+        tag: TestCustomComponent,
+        label: "test_custom_component",
+        prop: "test_custom_component",
+        attrs: {
+          test: "test_custom_component",
+        },
+        span: 8,
+      }),
+    ],
+    1,
+  ),
+  {
+    useRowLayout,
+    labelWidth: 100,
+  },
+);
 
 formBuilder.onChange(() => {
   // eslint-disable-next-line
@@ -94,20 +154,15 @@ formBuilder.onChange(() => {
 
 <template>
   <div class="test-form__container">
-    <CSearchForm :form-builder="formBuilder"></CSearchForm>
+    <CSearchForm
+      :form-builder="formBuilder"
+      :expand-depth="expandDepth"
+    ></CSearchForm>
   </div>
 </template>
 
 <style scoped lang="scss">
 .test-form__container {
   padding: 16px 24px;
-
-  :deep() {
-    .c-form__form.is-form-layout {
-      .el-input {
-        --el-input-width: 280px;
-      }
-    }
-  }
 }
 </style>

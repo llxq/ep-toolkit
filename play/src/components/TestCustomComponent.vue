@@ -14,7 +14,6 @@ const { test } = defineProps<{
 
 <template>
   <div style="display: flex; width: 100%">
-    {{ test }}
-    <el-input v-model="modelValue" />
+    <el-input v-model="modelValue" :placeholder="test" />
   </div>
 </template>

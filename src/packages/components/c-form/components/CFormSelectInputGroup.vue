@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { handleLongMaxValue } from "@/helper/number.ts";
-import { filterComponentEmptyProps } from "@/packages/components/c-form/core/helper/component.ts";
 import type {
   ICFormSelectInputGroupAttrs,
   ISelectInputGroupOption,
@@ -11,10 +10,15 @@ import type {
 } from "@/packages/components/c-form/core/types/shared.ts";
 import { useCFormComponentModelValue } from "@/packages/components/c-form/hooks/useCFormComponentModelValue.ts";
 import { useCFormComponentOptions } from "@/packages/components/c-form/hooks/useCFormComponentOptions.ts";
-import type { InputEmits } from "element-plus";
-import { isObject, isString, omit } from "lodash";
-import { computed } from "vue";
+import { useGetPureAttrs } from "@/packages/components/c-form/hooks/useGetPureAttrs.ts";
 import { CircleClose, Search } from "@element-plus/icons-vue";
+import type { InputEmits } from "element-plus";
+import { isObject, isString } from "lodash";
+import { computed } from "vue";
+
+defineOptions({
+  name: "CFormSelectInputGroup",
+});
 
 const props = withDefaults(
   defineProps<
@@ -24,7 +28,6 @@ const props = withDefaults(
     }
   >(),
   {
-    validateEvent: true,
     changeOnSelect: false,
     /* select 的默认宽度 */
     selectWidth: "100px",
@@ -121,18 +124,12 @@ const selectChangeEvent = () => {
   }
 };
 
-const getInputProps = computed(() =>
-  filterComponentEmptyProps(
-    omit(props, [
-      "modelValue",
-      "groupSelectInputAttrs",
-      "placeholder",
-      "options",
-      "className",
-      "class",
-    ]),
-  ),
-);
+const [getInputProps] = useGetPureAttrs(props, [
+  "modelValue",
+  "placeholder",
+  "options",
+  "className",
+]);
 
 const clear = () => {
   updateInputValue("");

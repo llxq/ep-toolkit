@@ -10,9 +10,9 @@ import {
   useCFormComponentModelValue,
 } from "@/packages/components/c-form/hooks/useCFormComponentModelValue.ts";
 import { useCFormComponentOptions } from "@/packages/components/c-form/hooks/useCFormComponentOptions.ts";
+import { useGetPureAttrs } from "@/packages/components/c-form/hooks/useGetPureAttrs.ts";
 import { type RadioProps } from "element-plus";
 import { omit } from "lodash";
-import { computed } from "vue";
 
 defineOptions({
   name: "CFormRadio",
@@ -33,9 +33,11 @@ const { parseOptions, loadingOptions } = useCFormComponentOptions(props);
 
 const { value } = useCFormComponentModelValue(props, emit);
 
-const radioGroupAttrs = computed(() =>
-  filterComponentEmptyProps(omit(props, ["on", "options", "modelValue"])),
-);
+const [radioGroupAttrs] = useGetPureAttrs(props, [
+  "on",
+  "options",
+  "modelValue",
+]);
 
 const radioAttrs = (item: TObj) =>
   filterComponentEmptyProps(

@@ -16,7 +16,7 @@ import type {
   TEvent,
 } from "@/packages/components/c-form/core/types/shared.ts";
 import type { ColProps, FormItemProps } from "element-plus";
-import { isFunction, isObject, merge } from "lodash";
+import { isFunction, isObject, isString, merge } from "lodash";
 import { markRaw } from "vue";
 
 let id = 0;
@@ -59,11 +59,6 @@ export class FormItem<T extends TObj = TObj, U extends TObj = TObj>
   ) => TNullableUndefinable<TObj>;
 
   /**
-   * 是否展示该列
-   */
-  public visible = true;
-
-  /**
    * 默认值，默认从策略里面获取，也可自定义。如未定义默认为 void 0
    * @see src/components/base-form/core/defaultPraseStrategy.ts
    */
@@ -97,9 +92,6 @@ export class FormItem<T extends TObj = TObj, U extends TObj = TObj>
    * @param props
    */
   public initProps(props: Partial<IFormItem<T>>) {
-    if (!props.prop) {
-      this.visible = true;
-    }
     this.prop = props.prop || this.prop;
     this.update(props);
   }
@@ -126,17 +118,30 @@ export class FormItem<T extends TObj = TObj, U extends TObj = TObj>
    * 校验当前是否可见。
    * @param formData
    */
-  public validateIsHidden<F extends TObj>(formData: F): boolean {
-    const isShow = isFunction(this.hidden)
-      ? !this.hidden(formData, this)
-      : !this.hidden;
-    return isShow && this.visible;
+  public isHidden<F extends TObj>(formData: F): boolean {
+    return isFunction(this.hidden)
+      ? this.hidden(formData, this)
+      : Boolean(this.hidden);
   }
 
-  public initFormItemVisible(hiddenProps: Set<string>): void {
-    if (this.prop) {
-      this.visible = !hiddenProps.has(this.prop as string);
+  /**
+   * 获取当前可见的属性
+   * @param hiddenProps
+   * @param formData
+   * @returns true is visible
+   */
+  public getVisible<F extends TObj>(
+    hiddenProps: Set<string>,
+    formData: F,
+  ): boolean {
+    const userIsHidden = this.isHidden(formData);
+    if (userIsHidden) {
+      return false;
     }
+    if (this.prop && isString(this.prop)) {
+      return !hiddenProps.has(this.prop);
+    }
+    return true;
   }
 
   public addStopper(fn: () => void): void {

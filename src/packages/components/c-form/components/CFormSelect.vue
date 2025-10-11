@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { filterComponentEmptyProps } from "@/packages/components/c-form/core/helper/component.ts";
 import type { ICFormSelectAttrs } from "@/packages/components/c-form/core/types/formItemAttrs.ts";
 import type { TEvent } from "@/packages/components/c-form/core/types/shared.ts";
 import {
@@ -7,8 +6,8 @@ import {
   useCFormComponentModelValue,
 } from "@/packages/components/c-form/hooks/useCFormComponentModelValue.ts";
 import { useCFormComponentOptions } from "@/packages/components/c-form/hooks/useCFormComponentOptions.ts";
+import { useGetPureAttrs } from "@/packages/components/c-form/hooks/useGetPureAttrs.ts";
 import { computed } from "vue";
-import { omit } from "lodash";
 
 defineOptions({
   name: "CFormSelect",
@@ -22,10 +21,7 @@ const props = withDefaults(defineProps<ICFormSelectProps>(), {
   on: () => ({}),
   options: () => [],
   reserveKeyword: true,
-  persistent: true,
-  validateEvent: true,
   showArrow: true,
-  teleported: true,
 });
 
 const emit = defineEmits<ICFormComponentModelValueEmit>();
@@ -34,9 +30,7 @@ const { parseOptions, loadingOptions } = useCFormComponentOptions(props);
 
 const { value } = useCFormComponentModelValue(props, emit);
 
-const selectAttrs = computed(() =>
-  filterComponentEmptyProps(omit(props, ["on", "options", "modelValue"])),
-);
+const [selectAttrs] = useGetPureAttrs(props, ["on", "options", "modelValue"]);
 
 const selectWidth = computed(() => props.width || "100%");
 </script>

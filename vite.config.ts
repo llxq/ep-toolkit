@@ -45,6 +45,8 @@ export default defineConfig({
           vue: "Vue",
           "element-plus": "ElementPlus",
           "vue-router": "VueRouter",
+          dayjs: "dayjs",
+          "@element-plus/icons-vue": "iconsVue",
         },
       },
       external: Object.keys(pkg.dependencies).filter(

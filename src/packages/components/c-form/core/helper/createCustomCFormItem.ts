@@ -55,9 +55,9 @@ export function defineCustomCFormComponent<T extends Component>(
   component?: T,
 ) {
   if (isObject(key)) {
-    for (const [_key, value] of Object.entries(key)) {
+    Object.entries(key).forEach(([_key, value]) => {
       addCustomDefinition(_key as TKeyofCustomFormComponentType, value);
-    }
+    });
   } else {
     addCustomDefinition(key, { component, defaultPraseStrategy });
   }

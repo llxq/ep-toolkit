@@ -35,7 +35,7 @@ export class FormBuilder<T extends TObj = TObj> {
 
   public formConfigManager = new FormConfigManager();
 
-  public formInstanceManager = new FormInstanceManager<T>();
+  public formInstanceManager = new FormInstanceManager();
 
   /**
    * 获取表单项
@@ -55,10 +55,7 @@ export class FormBuilder<T extends TObj = TObj> {
    * 获取当前可展示的列
    */
   public get getShowFormItems(): FormItem<T>[] {
-    return this.formItemManager.getShowFormItems(
-      this.formData,
-      this.hiddenProps,
-    );
+    return this.formItemManager.getShowFormItems(this.formData);
   }
 
   /**
@@ -235,5 +232,12 @@ export class FormBuilder<T extends TObj = TObj> {
     if (triggerList.includes("search") || isAll) {
       void this.emit(EFormEvent.SEARCH);
     }
+  }
+
+  /**
+   * 表单校验
+   */
+  public validate(): Promise<boolean> {
+    return this.formInstanceManager.validate();
   }
 }

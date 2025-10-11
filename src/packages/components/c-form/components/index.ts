@@ -18,6 +18,7 @@ export const cFormComponents: Partial<Record<EFormComponentType, Component>> = {
   [EFormComponentType.INPUT]: CFormInput,
   [EFormComponentType.CASCADER]: CFormCascader,
   [EFormComponentType.DATE]: CFormDate,
+  [EFormComponentType.DATE_RANGE]: CFormDate,
   [EFormComponentType.DATE_RANGE_AND_SELECT_GROUP]:
     CFormDateRangeAndSelectGroup,
   [EFormComponentType.NUMBER_INPUT]: CFormNumberInput,

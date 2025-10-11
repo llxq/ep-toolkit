@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { filterComponentEmptyProps } from "@/packages/components/c-form/core/helper/component.ts";
 import type { ICFormDateAttrs } from "@/packages/components/c-form/core/types/formItemAttrs.ts";
 import type { TEvent } from "@/packages/components/c-form/core/types/shared.ts";
 import {
   type ICFormComponentModelValueEmit,
   useCFormComponentModelValue,
 } from "@/packages/components/c-form/hooks/useCFormComponentModelValue.ts";
+import { useGetPureAttrs } from "@/packages/components/c-form/hooks/useGetPureAttrs.ts";
 import dayjs from "dayjs";
+import { debounce } from "lodash";
 import { computed } from "vue";
-import { omit, debounce } from "lodash";
 
 defineOptions({
   name: "CFormDate",
@@ -21,7 +21,6 @@ export interface ICFormDateProps extends ICFormDateAttrs {
 const props = withDefaults(defineProps<ICFormDateProps>(), {
   on: () => ({}),
   autoAddSeconds: true,
-  validateEvent: true,
   /* 默认选择时间的时候从开始时间的 00:00 到结束时间的 23:59 */
   useDefaultTimeToDay: true,
   showNow: true,
@@ -34,19 +33,15 @@ const emit = defineEmits<
 
 const { value } = useCFormComponentModelValue(props, emit);
 
-const getDateAttr = computed(() =>
-  filterComponentEmptyProps(
-    omit(props, [
-      "on",
-      "modelValue",
-      "defaultTime",
-      "autoAddSeconds",
-      "useDefaultTimeToDay",
-      "shortcuts",
-      "popperClass",
-    ]),
-  ),
-);
+const [getDateAttr] = useGetPureAttrs(props, [
+  "on",
+  "modelValue",
+  "defaultTime",
+  "autoAddSeconds",
+  "useDefaultTimeToDay",
+  "shortcuts",
+  "popperClass",
+]);
 
 const getDefaultTime = computed(() => {
   /* 设置 defaultTime 为 00:00 到 23:59 */

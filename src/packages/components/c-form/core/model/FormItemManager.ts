@@ -1,7 +1,6 @@
 import { createFormItem } from "@/packages/components/c-form/core/helper/createFormItem.ts";
 import type { FormItem } from "@/packages/components/c-form/core/model/FormItem.ts";
 import type { IFormItem } from "@/packages/components/c-form/core/types/formProps.ts";
-import { sortBy } from "lodash";
 
 /**
  * 表单项管理
@@ -25,13 +24,8 @@ export class FormItemManager<T extends TObj> {
   /**
    * 获取当前可展示的列数据
    * @param formData
-   * @param hiddenProps
    */
-  public getShowFormItems(
-    formData: T,
-    hiddenProps: Set<string>,
-  ): FormItem<T>[] {
-    this.formItems.forEach((column) => column.initFormItemVisible(hiddenProps));
-    return this.formItems.filter((column) => column.validateIsHidden(formData));
+  public getShowFormItems(formData: T): FormItem<T>[] {
+    return this.formItems.filter((column) => !column.isHidden(formData));
   }
 }

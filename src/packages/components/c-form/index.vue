@@ -1,4 +1,5 @@
 <script setup lang="tsx">
+import { isAsyncComponent } from "@/helper/is.ts";
 import { EFormEvent } from "@/packages/components/c-form/core/constants/enum.ts";
 import type { FormBuilder } from "@/packages/components/c-form/core/FormBuilder.ts";
 import type { FormItem } from "@/packages/components/c-form/core/model/FormItem.ts";
@@ -8,7 +9,13 @@ import { useCForm } from "@/packages/components/c-form/hooks/useCForm.ts";
 import { vEllipsis } from "@/packages/directives/ellipsis.ts";
 import type { ElForm } from "element-plus";
 import { isFunction } from "lodash";
-import { type DefineComponent, type VNode, withDirectives } from "vue";
+import {
+  defineAsyncComponent,
+  type DefineComponent,
+  resolveDynamicComponent,
+  type VNode,
+  withDirectives,
+} from "vue";
 
 defineOptions({
   name: "CForm",
@@ -24,30 +31,49 @@ const emit = defineEmits<{
 }>();
 
 const { formBuilder } = defineProps<{
-  /* 不使用泛形组件，使用 any 兼容各类型的 formBuilder */
+  /**
+   * 不使用泛形组件，使用 any 兼容各类型的 formBuilder
+   */
   formBuilder: FormBuilder<any>;
 }>();
 
 const { formConfigManager, config } = formBuilder;
 
-const { formRef, collectionRef } = useCForm(formBuilder);
+const { formRef, collectionComponentParentRef, componentParentInstanceMap } =
+  useCForm(formBuilder);
 
 const renderFormItem = (formItem: FormItem) => {
-  const { elFormItemAttrs, prop, label, className } = formItem;
-  const RenderComponent = formItem.getFormComponent as DefineComponent;
+  const { elFormItemAttrs, prop, label, className = "" } = formItem;
+  const RenderComponent = (
+    isAsyncComponent(formItem.getFormComponent)
+      ? defineAsyncComponent({
+          loader: formItem.getFormComponent,
+          delay: 0,
+        })
+      : resolveDynamicComponent(formItem.getFormComponent)
+  ) as DefineComponent;
+  const isRowLayout = config.useRowLayout;
   return (
     <el-form-item
       key={prop}
       {...elFormItemAttrs}
       prop={prop}
-      class={className}
-      ref={(currentRef: unknown) => collectionRef(currentRef, formItem)}
+      class={`${className} c-form__form-item`}
+      ref={(currentRef: unknown) =>
+        !isRowLayout && collectionComponentParentRef(currentRef, formItem)
+      }
       v-slots={{
         label: () =>
           isFunction(label)
             ? label(formItem)
             : withDirectives(<span>{label}</span>, [[vEllipsis]]),
       }}
+      data-prop={isRowLayout ? void 0 : formItem.prop}
+      data-visible={
+        isRowLayout
+          ? void 0
+          : formItem.getVisible(formBuilder.hiddenProps, formBuilder.formData)
+      }
     >
       <RenderComponent
         {...formItem.attrs}
@@ -78,12 +104,19 @@ const FormContentComponent = () => {
     >
       {formBuilder.getShowFormItems.map((formItem) => (
         <el-col
+          class="c-form__col"
           {...formItem.elColAttrs}
           key={formItem.prop}
           span={formItem.span}
           style={formItem.style}
           data-prop={formItem.prop}
-          data-visible={formItem.visible}
+          data-visible={formItem.getVisible(
+            formBuilder.hiddenProps,
+            formBuilder.formData,
+          )}
+          ref={(currentRef: unknown) =>
+            collectionComponentParentRef(currentRef, formItem)
+          }
         >
           {renderFormItem(formItem)}
         </el-col>
@@ -97,6 +130,9 @@ const FormContentComponent = () => {
 
 defineExpose({
   formRef,
+  getComponentParentInstance: (prop: string) => {
+    return componentParentInstanceMap.value[prop];
+  },
 });
 </script>
 
@@ -112,7 +148,13 @@ defineExpose({
       <el-form
         v-if="formBuilder.isInit"
         ref="formRef"
-        :class="['c-form__form', { 'is-form-layout': !config.useRowLayout }]"
+        :class="[
+          'c-form__form',
+          {
+            'is-form-layout': !config.useRowLayout,
+            'is-form-row-layout': config.useRowLayout,
+          },
+        ]"
         v-bind="formConfigManager.getFormAttrs"
         :model="formBuilder.formData"
         @submit.prevent
@@ -129,9 +171,15 @@ defineExpose({
 <style scoped lang="scss">
 .c-form {
   &__container {
+    width: 100%;
+
     &.has-operation {
       display: flex;
       column-gap: 16px;
+
+      .c-form__body {
+        flex: 1;
+      }
     }
   }
 
@@ -157,6 +205,22 @@ defineExpose({
         .base-number-input__container {
           .el-input {
             --el-input-width: 180px;
+          }
+        }
+      }
+    }
+
+    &.is-form-row-layout {
+      :deep() {
+        .el-form-item__content {
+          & > div {
+            width: 100%;
+          }
+
+          .c-form-number-range__container {
+            .el-input {
+              flex: 1;
+            }
           }
         }
       }
