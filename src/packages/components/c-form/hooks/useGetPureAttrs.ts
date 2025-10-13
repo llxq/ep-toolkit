@@ -1,4 +1,5 @@
 import { filterComponentEmptyProps } from "@/packages/components/c-form/core/helper/component.ts";
+import { camelize } from "@/packages/components/c-form/helper/camelize.ts";
 import { omit } from "lodash";
 import { computed, type ComputedRef, getCurrentInstance } from "vue";
 
@@ -21,9 +22,10 @@ export const useGetPureAttrs = <T extends TObj, U extends keyof T>(
       // 用户实际传递来的属性
       const attrs = instance?.vnode?.props;
       if (attrs) {
-        return Object.keys(props).reduce((result, key) => {
-          if (Reflect.has(attrs, key)) {
-            Reflect.set(result, key, Reflect.get(props, key));
+        return Object.keys(attrs).reduce((result, key) => {
+          const kebabKey = camelize(key);
+          if (Reflect.has(props, kebabKey)) {
+            Reflect.set(result, kebabKey, Reflect.get(props, kebabKey));
           }
           return result;
         }, {});
