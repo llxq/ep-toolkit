@@ -69,6 +69,6 @@ export default [
     },
   },
   {
-    ignores: ["**/*.d.ts", "dist/**/*", "**/*.json"],
+    ignores: ["**/*.d.ts", "dist/**/*", "**/*.json", "**/*.md"],
   },
 ];

@@ -22,10 +22,25 @@ export const useGetPureAttrs = <T extends TObj, U extends keyof T>(
       // 用户实际传递来的属性
       const attrs = instance?.vnode?.props;
       if (attrs) {
-        return Object.keys(attrs).reduce((result, key) => {
-          const kebabKey = camelize(key);
-          if (Reflect.has(props, kebabKey)) {
-            Reflect.set(result, kebabKey, Reflect.get(props, kebabKey));
+        const attrKeys = Object.keys(attrs).map(camelize);
+        return Object.keys(props).reduce((result, key) => {
+          const currentPropValue = Reflect.get(props, key);
+          if (attrKeys.includes(key)) {
+            Reflect.set(result, key, currentPropValue);
+          } else {
+            /**
+             * 判断是否为默认值，如何判断？
+             * 非 Boolean 外的值都是 undefined。Boolean 的默认值为 false
+             * @see https://cn.vuejs.org/guide/components/props.html#props
+             */
+            if (typeof currentPropValue === "boolean") {
+              // 只有非 false 才是用户传递的值
+              currentPropValue && Reflect.set(result, key, currentPropValue);
+            } else {
+              // 非 Boolean 的值都是 undefined
+              typeof currentPropValue !== "undefined" &&
+                Reflect.set(result, key, currentPropValue);
+            }
           }
           return result;
         }, {});

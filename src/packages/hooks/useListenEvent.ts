@@ -1,60 +1,139 @@
-import {
-  getCurrentScope,
-  onBeforeUnmount,
-  onScopeDispose,
-  useTemplateRef,
-} from "vue";
+import { getCurrentScope, onBeforeUnmount, onScopeDispose } from "vue";
+
+interface ListenerStackItem {
+  target: EventTarget;
+  event: string;
+  fn: EventListenerOrEventListenerObject;
+  options?: boolean | AddEventListenerOptions;
+}
 
 /**
  * 创建一个监听事件
+ *
  * @example
- * const { on, stops } = useListenEvent();
- * on("click", () => {
- *   console.log("click");
- * });
- * on("click", () => {
- *   console.log("click");
- * });
- * // stop all events
- * stops();
+ * // 指定目标（document）
+ * const { on, stop } = useListenEvent();
+ * on(document, "scroll", () => {
+ *   console.log(1);
+ * }, { passive: false });
+ *
+ * @example
+ * // 向后兼容：不指定目标，默认绑定到 document.body
+ * const { on } = useListenEvent();
+ * on("click", (e) => {
+ *   // ...
+ * }, { passive: true });
  */
-export const useListenEvent = <T extends HTMLElement>() => {
-  const listenElementRef = useTemplateRef<T>("listenElementRef");
-  const getElement = () => listenElementRef?.value || document.body;
+export const useListenEvent = () => {
+  const getDefaultTarget = () => document.body as EventTarget;
 
-  const stacks: {
-    event: keyof HTMLElementEventMap;
-    fn: <K extends keyof HTMLElementEventMap>(
-      _: HTMLElementEventMap[K],
-    ) => void;
-    options?: boolean | AddEventListenerOptions;
-  }[] = [];
+  const stacks: ListenerStackItem[] = [];
 
-  const on = <K extends keyof HTMLElementEventMap>(
+  // 类型工具：根据不同 target 推导事件 Map
+  type EventMapFor<Target> = Target extends HTMLElement
+    ? HTMLElementEventMap
+    : Target extends typeof document
+      ? DocumentEventMap
+      : Target extends typeof window
+        ? WindowEventMap
+        : Record<string, Event>;
+
+  /**
+   * 绑定事件监听
+   *
+   * @example
+   * const { on } = useListenEvent();
+   * on(document, "scroll", (e) => { // ...
+   * }, { passive: false });
+   *
+   * @example
+   * const { on } = useListenEvent();
+   * on("click", (e) => { // ...
+   * }, { passive: true });
+   */
+  // 重载：保持向后兼容（默认监听到 body）
+  function on<K extends keyof HTMLElementEventMap>(
     event: K,
     fn: (_: HTMLElementEventMap[K]) => void,
     options?: boolean | AddEventListenerOptions,
-  ) => {
-    stacks.push({ event, fn: fn as never, options });
-    getElement().addEventListener<K>(event, fn, options);
-  };
+  ): void;
+  // 重载：HTMLElement 目标
+  function on<Target extends HTMLElement, K extends keyof EventMapFor<Target>>(
+    target: Target,
+    event: K,
+    fn: (_: EventMapFor<Target>[K]) => void,
+    options?: boolean | AddEventListenerOptions,
+  ): void;
+  // 重载：Document 目标
+  function on<
+    Target extends typeof document,
+    K extends keyof EventMapFor<Target>,
+  >(
+    target: Target,
+    event: K,
+    fn: (_: EventMapFor<Target>[K]) => void,
+    options?: boolean | AddEventListenerOptions,
+  ): void;
+  // 重载：Window 目标
+  function on<
+    Target extends typeof window,
+    K extends keyof EventMapFor<Target>,
+  >(
+    target: Target,
+    event: K,
+    fn: (_: EventMapFor<Target>[K]) => void,
+    options?: boolean | AddEventListenerOptions,
+  ): void;
+  // 实现
+  function on(
+    targetOrEvent: EventTarget | string,
+    eventOrFn?: string | EventListenerOrEventListenerObject,
+    fnOrOptions?:
+      | EventListenerOrEventListenerObject
+      | boolean
+      | AddEventListenerOptions,
+    maybeOptions?: boolean | AddEventListenerOptions,
+  ): void {
+    let target: EventTarget;
+    let event: string;
+    let fn: EventListenerOrEventListenerObject;
+    let options: boolean | AddEventListenerOptions | undefined;
 
-  const stops = () => {
-    stacks.forEach(({ event, fn, options }) =>
-      getElement().removeEventListener(event, fn, options),
+    if (typeof targetOrEvent === "string") {
+      target = getDefaultTarget();
+      event = targetOrEvent;
+      fn = eventOrFn as EventListenerOrEventListenerObject;
+      options = fnOrOptions as boolean | AddEventListenerOptions | undefined;
+    } else {
+      target = targetOrEvent;
+      event = eventOrFn as string;
+      fn = fnOrOptions as EventListenerOrEventListenerObject;
+      options = maybeOptions as boolean | AddEventListenerOptions | undefined;
+    }
+
+    target.addEventListener(
+      event,
+      fn as EventListener,
+      options as AddEventListenerOptions,
+    );
+    stacks.push({ target, event, fn, options });
+  }
+
+  const stop = () => {
+    stacks.forEach(({ target, event, fn, options }) =>
+      target.removeEventListener(event, fn as EventListener, options),
     );
     stacks.length = 0;
   };
 
-  onBeforeUnmount(stops);
+  onBeforeUnmount(stop);
 
   if (getCurrentScope()) {
-    onScopeDispose(stops);
+    onScopeDispose(stop);
   }
 
   return {
-    stops,
+    stop,
     on,
-    listenElementRef,
   };
 };
