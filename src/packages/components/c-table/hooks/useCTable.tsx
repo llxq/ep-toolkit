@@ -1,4 +1,4 @@
-import type { TElTableInstance, TElTableRefInstance } from "@/helper/type.ts";
+import type { IElTableInstance, TElTableRefInstance } from "@/helper/type.ts";
 import type { TableBuilder } from "@/packages/components/c-table/core/TableBuilder.ts";
 import { epToolkitConfigService } from "@/packages/store/config/index.service.ts";
 import { merge, isNull, isUndefined } from "lodash";
@@ -12,7 +12,7 @@ export const useCTable = <T extends TObj>(tableBuilder: TableBuilder<T>) => {
    * 初始化表格实例
    * @param instance
    */
-  const initElTableInstance = (instance: TElTableInstance) => {
+  const initElTableInstance = (instance: IElTableInstance) => {
     elTableRef.value = instance;
     tableBuilder.initElTableInstance(elTableRef);
   };

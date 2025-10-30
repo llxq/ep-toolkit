@@ -6,7 +6,7 @@ import {
 } from "@/packages/components/c-table/core/constants/event.ts";
 import type { TFunction } from "@/packages/components/c-table/core/types/shared.ts";
 
-interface ITableEventStack {
+export interface ITableEventStack {
   /**
    * 事件id
    */
