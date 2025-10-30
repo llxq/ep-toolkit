@@ -17,3 +17,12 @@ export const isPromise = <T>(obj: unknown): obj is Promise<T> =>
 export const isAsyncComponent = <T extends Component>(
   value: unknown,
 ): value is AsyncComponentLoader<T> => typeof value === "function";
+
+/**
+ * 判断列的值是否为空
+ * @param value
+ */
+export const isEmptyCellValue = (value: unknown): value is undefined =>
+  typeof value === "undefined" ||
+  (typeof value === "object" && value === null) ||
+  value === "";

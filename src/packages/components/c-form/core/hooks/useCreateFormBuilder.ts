@@ -4,15 +4,15 @@ import type {
   ICFormProps,
   IFormItem,
 } from "@/packages/components/c-form/core/types/formProps.ts";
-import { type Ref, ref, type ShallowRef, unref } from "vue";
+import type { TableBuilder } from "@/packages/components/c-table/core/TableBuilder.ts";
+import { type Ref, ref, unref } from "vue";
 
 export interface ICreateFormBuilderReturn<T extends TObj> {
   formBuilder: FormBuilder<T>;
 }
 
 export interface ICreateFormBuilderConfig extends ICFormProps {
-  // TODO 完善 table 的时候需要将该 any 变更回来
-  baseTableRef?: Readonly<ShallowRef<TNullable<any>>> | Ref<any>;
+  tableBuilder?: Ref<TableBuilder>;
 }
 
 /**
@@ -39,18 +39,19 @@ export const useCreateFormBuilder = <T extends TObj = TObj>(
   fields?: (IFormItem | FormItem)[],
   config?: ICreateFormBuilderConfig,
 ): ICreateFormBuilderReturn<T> => {
+  const { tableBuilder, ...restConfig } = config ?? {};
   const builder = new FormBuilder<T>(
     fields as (IFormItem<T> | FormItem<T>)[],
-    config,
+    restConfig,
   );
   const formBuilder = ref<FormBuilder<T>>(builder) as unknown as Ref<
     FormBuilder<T>
   >;
 
-  /* 如果传递了 baseTableRef，则会默认监听change事件，并且刷新表格内容 */
-  if (config?.baseTableRef) {
+  /* 如果传递了 tableBuilder，则会默认监听change事件，并且刷新表格内容 */
+  if (tableBuilder?.value) {
     formBuilder.value.onChange(() => {
-      config.baseTableRef?.value?.refresh();
+      void tableBuilder.value.refresh();
     });
   }
 

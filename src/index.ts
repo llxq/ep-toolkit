@@ -9,9 +9,12 @@ const installer = {
 export { installer as default };
 
 /**
- * 目前三个包的内容作为统一导出，暂时不考虑分包处理。
+ * 暂时不考虑分包处理。
  */
 export * from "@/packages/components";
 export * from "@/packages/components/help.exports.ts";
 export * from "@/packages/hooks";
 export * from "@/packages/utils";
+export * from "@/packages/directives";
+// 配置服务
+export * from "@/packages/store/config/index.service.ts";

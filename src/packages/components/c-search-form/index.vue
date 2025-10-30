@@ -43,6 +43,7 @@ const {
 }>();
 
 const isExpand = ref(false);
+const showExpand = ref(false);
 
 const cFormRef = ref<InstanceType<typeof CForm>>();
 const calcFieldsVisible = async () => {
@@ -54,6 +55,7 @@ const calcFieldsVisible = async () => {
     return;
   }
   await nextTick();
+  showExpand.value = true;
   const topStack: [number, number] = [] as unknown as [number, number];
   const distance = 5;
   let level = 1;
@@ -88,6 +90,9 @@ const calcFieldsVisible = async () => {
       }
     }
   });
+  if (!formBuilder.hiddenProps.size) {
+    showExpand.value = false;
+  }
 };
 
 watch(
@@ -125,7 +130,7 @@ const reset = () => {
       <template #operation>
         <slot name="expand">
           <div
-            v-if="autoExpand"
+            v-if="autoExpand && showExpand"
             :class="['c-search-form__toggle-expand', { 'is-expand': isExpand }]"
             @click="toggleExpand"
           >

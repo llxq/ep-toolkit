@@ -1,5 +1,5 @@
 import { filterComponentEmptyProps } from "@/packages/components/c-form/core/helper/component.ts";
-import { camelize } from "@/packages/components/c-form/helper/camelize.ts";
+import { camelize } from "@/packages/utils";
 import { omit } from "lodash";
 import { computed, type ComputedRef, getCurrentInstance } from "vue";
 

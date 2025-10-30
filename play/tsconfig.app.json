@@ -12,9 +12,9 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
     "paths": {
-      "ep-kit": ["../src/index"],
+      "ep-toolkit": ["../src/index"],
       "@/*": ["../src/*"],
-      "@play": ["./src/*"]
+      "@play/*": ["./src/*"]
     },
     "jsx": "preserve",
     "jsxImportSource": "vue"

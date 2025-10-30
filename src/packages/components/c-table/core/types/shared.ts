@@ -1,3 +1,5 @@
+export type TFunction<T = any> = (...args: any[]) => T;
+
 /**
  * 表格加载的数据结构
  */
@@ -6,6 +8,10 @@ export interface ICTableLoadResult {
    * 表格数据
    */
   data?: TObj[];
+  /**
+   * 表格数据
+   */
+  records?: TObj[];
   /**
    * 总条数
    */

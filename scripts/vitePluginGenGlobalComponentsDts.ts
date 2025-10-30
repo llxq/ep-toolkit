@@ -45,7 +45,7 @@ export const vitePluginGenGlobalComponentsDts = () => {
   export interface GlobalComponents {
     ${componentNames
       .map((name, index) => {
-        return `${index ? " ".repeat(4) : ""}${name}: (typeof import("ep-kit"))["${name}"]`;
+        return `${index ? " ".repeat(4) : ""}${name}: (typeof import("ep-toolkit"))["${name}"]`;
       })
       .join("\n")}
   }

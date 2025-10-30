@@ -1,5 +1,5 @@
 {
-  "name": "ep-kit-play",
+  "name": "ep-toolkit-play",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -13,5 +13,9 @@
   },
   "overrides": {
     "vite": "npm:rolldown-vite@7.1.12"
+  },
+  "dependencies": {
+    "pinia": "^3.0.3",
+    "vue-router": "^4.6.3"
   }
 }

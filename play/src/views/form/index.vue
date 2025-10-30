@@ -1,23 +1,24 @@
 <script setup lang="ts">
-import { EFormComponentType } from "@/packages/components/c-form/core/constants/enum.ts";
-import { createCustomCFormItem } from "@/packages/components/c-form/core/helper/createCustomCFormItem.ts";
-import { createFormItem } from "@/packages/components/c-form/core/helper/createFormItem.ts";
-import { useCreateFormBuilder } from "@/packages/components/c-form/core/hooks/useCreateFormBuilder.ts";
-import { ATTRS_OPTIONS, CASCADER_OPTIONS } from "@play/utils/options.ts";
+import {
+  EFormComponentType,
+  createCustomCFormItem,
+  createFormItem,
+  useCreateFormBuilder,
+} from "ep-toolkit";
+import { ATTRS_OPTIONS, CASCADER_OPTIONS } from "@play/utils/options";
 import { ElMessage } from "element-plus";
 import TestCustomComponent from "@play/components/TestCustomComponent.vue";
-import { repeatFormItems } from "@play/utils/array.ts";
 
 defineOptions({
-  name: "TestForm",
+  name: "PlayForm",
 });
 
 const { useRowLayout = true } = defineProps<{
   useRowLayout?: boolean;
 }>();
 
-const { formBuilder } = useCreateFormBuilder<{ test: string }>(
-  repeatFormItems([
+const { formBuilder } = useCreateFormBuilder(
+  [
     createFormItem({
       tag: EFormComponentType.INPUT,
       label: "input",
@@ -158,7 +159,7 @@ const { formBuilder } = useCreateFormBuilder<{ test: string }>(
       },
       span: 12,
     },
-  ]),
+  ],
   {
     useRowLayout,
     rules: {
@@ -184,7 +185,7 @@ const submit = async () => {
 </script>
 
 <template>
-  <div class="test-form__container">
+  <div class="play-form__container">
     <CForm :form-builder="formBuilder">
       <template #operation>operation</template>
       <template #endFormItem>end form item</template>
@@ -195,7 +196,7 @@ const submit = async () => {
 </template>
 
 <style scoped lang="scss">
-.test-form__container {
+.play-form__container {
   padding: 16px 24px;
 }
 </style>

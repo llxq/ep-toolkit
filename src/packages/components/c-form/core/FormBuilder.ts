@@ -11,10 +11,11 @@ import type {
 } from "@/packages/components/c-form/core/types/formProps.ts";
 import type { TTriggerEventName } from "@/packages/components/c-form/core/types/shared.ts";
 import { EventBus } from "@/packages/utils";
-import { isEmpty, isFunction, merge } from "lodash";
+import { isEmpty, isFunction } from "lodash";
 
 /**
  * 表单构造器，用于构造表单scheme和表单的各个事件等处理。
+ * XXX 目前所有的实例都是暴漏出去的，后续可能会调整为私有的
  */
 export class FormBuilder<T extends TObj = TObj> {
   private readonly eventBus = new EventBus();
@@ -107,12 +108,7 @@ export class FormBuilder<T extends TObj = TObj> {
     columns: (IFormItem<T> | FormItem<T>)[],
     config: ICFormProps = {},
   ): void {
-    this.formConfigManager.init(
-      merge(
-        { startLoading: true, useRowLayout: false } as Partial<ICFormProps>,
-        config,
-      ),
-    );
+    this.formConfigManager.init(config);
     if (columns.length) {
       this.formDataStore.init(
         this.formItemManager.init(this.parseFormItem(columns)),

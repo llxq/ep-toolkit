@@ -13,7 +13,7 @@ export interface ICustomComponentDefinition {
 /**
  * EFormComponentType 类型扩展
  * @example
- * declare module "ep-kit" {
+ * declare module "ep-toolkit" {
  *   export interface ICustomFormComponentType {
  *     // 也可以自定义对应枚举作为相应的 key
  *     'custom-input': {

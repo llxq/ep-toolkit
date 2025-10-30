@@ -14,6 +14,13 @@ export * from "./c-form/core/types/shared.ts";
 export * from "./c-form/core/FormBuilder.ts";
 export * from "./c-form/hooks/useGetPureAttrs.ts";
 export * from "./c-form/hooks/useCFormComponentOptions.ts";
+export * from "./c-table/core/TableBuilder.ts";
+export * from "./c-table/core/constants/vNode.tsx";
+export * from "./c-table/core/constants/event.ts";
+export * from "./c-table/core/types/shared.ts";
+export * from "./c-table/core/types/tabColumn.ts";
+export * from "./c-table/core/types/tableConfig.ts";
+export * from "./c-table/hooks/useCreateTableBuilder.ts";
 
 /**
  * components export

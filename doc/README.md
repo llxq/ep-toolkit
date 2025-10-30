@@ -5,6 +5,7 @@ EP-Toolkit 是一个基于 Vue 3 和 Element Plus 的组件库，提供了丰富
 ## 📚 文档目录
 
 ### 📦 组件文档
+
 - [组件文档总览](./components/README.md) - 所有组件的详细文档
   - [C-Auto-Tooltip 自动提示组件](./components/c-auto-tooltip.md)
   - [C-Form 表单组件](./components/c-form.md)
@@ -13,10 +14,11 @@ EP-Toolkit 是一个基于 Vue 3 和 Element Plus 的组件库，提供了丰富
   - [表单子组件](./components/form-components.md)
 
 ### 🔧 Hooks 文档
+
 - [Hooks 文档总览](./hooks/README.md) - 所有 Hooks 的详细文档
   - [useCreateFormBuilder](./hooks/useCreateFormBuilder.md) - 表单构建器
   - [useAsyncLoader](./hooks/useAsyncLoader.md) - 异步加载优化
-  - [useListenEvent](./hooks/useListenEvent.md) - 事件监听
+  - [useEvent](./hooks/useEvent.md) - 事件监听
   - [useOpenDialog](./hooks/useOpenDialog.md) - 弹框管理
   - [useResizeObserver](./hooks/useResizeObserver.md) - 元素大小监听
 
@@ -36,17 +38,17 @@ npm install ep-toolkit
 </template>
 
 <script setup>
-import { EFormComponentType } from 'ep-toolkit'
-import { useCreateFormBuilder } from 'ep-toolkit'
+import { EFormComponentType } from "ep-toolkit";
+import { useCreateFormBuilder } from "ep-toolkit";
 
 const { formBuilder } = useCreateFormBuilder([
   {
     tag: EFormComponentType.INPUT,
-    label: '用户名',
-    prop: 'username',
-    attrs: { placeholder: '请输入用户名' }
-  }
-])
+    label: "用户名",
+    prop: "username",
+    attrs: { placeholder: "请输入用户名" },
+  },
+]);
 </script>
 ```
 
@@ -57,28 +59,28 @@ const { formBuilder } = useCreateFormBuilder([
 EP-Toolkit 的核心是动态表单构建系统，通过 `useCreateFormBuilder` Hook 可以轻松创建复杂的表单：
 
 ```typescript
-import { EFormComponentType } from 'ep-toolkit'
-import { useCreateFormBuilder } from 'ep-toolkit'
+import { EFormComponentType } from "ep-toolkit";
+import { useCreateFormBuilder } from "ep-toolkit";
 
 const { formBuilder } = useCreateFormBuilder([
   {
     tag: EFormComponentType.INPUT,
-    label: '用户名',
-    prop: 'username',
-    attrs: { placeholder: '请输入用户名' }
+    label: "用户名",
+    prop: "username",
+    attrs: { placeholder: "请输入用户名" },
   },
   {
     tag: EFormComponentType.SELECT,
-    label: '角色',
-    prop: 'role',
+    label: "角色",
+    prop: "role",
     attrs: {
       options: [
-        { label: '管理员', value: 'admin' },
-        { label: '用户', value: 'user' }
-      ]
-    }
-  }
-])
+        { label: "管理员", value: "admin" },
+        { label: "用户", value: "user" },
+      ],
+    },
+  },
+]);
 ```
 
 ### 搜索表单
@@ -87,7 +89,7 @@ const { formBuilder } = useCreateFormBuilder([
 
 ```vue
 <template>
-  <c-search-form 
+  <c-search-form
     :form-builder="searchFormBuilder"
     :auto-expand="true"
     :expand-depth="2"
@@ -101,16 +103,16 @@ EP-Toolkit 提供了多个实用的 Hooks：
 
 ```typescript
 // 异步加载优化
-const [loading, execute] = useAsyncLoader()
+const [loading, execute] = useAsyncLoader();
 
 // 事件监听
-const { on, stops } = useListenEvent()
+const { on, stops } = useEvent();
 
 // 弹框管理
-const { openDialog } = useOpenDialog()
+const { openDialog } = useOpenDialog();
 
 // 元素大小监听
-const { onResize } = useResizeObserver()
+const { onResize } = useResizeObserver();
 ```
 
 ## 🎯 特性
@@ -125,6 +127,7 @@ const { onResize } = useResizeObserver()
 ## 📁 项目结构
 
 ### 源码结构
+
 ```
 src/packages/
 ├── components/          # 组件
@@ -134,13 +137,14 @@ src/packages/
 │   └── c-table/       # 表格组件
 ├── hooks/              # Hooks
 │   ├── useAsyncLoader.ts
-│   ├── useListenEvent.ts
+│   ├── useEvent.ts
 │   ├── useOpenDialog.ts
 │   └── useResizeObserver.ts
 └── directives/         # 指令
 ```
 
 ### 文档结构
+
 ```
 doc/
 ├── README.md           # 文档总览
@@ -155,7 +159,7 @@ doc/
     ├── README.md      # Hooks 文档索引
     ├── useCreateFormBuilder.md
     ├── useAsyncLoader.md
-    ├── useListenEvent.md
+    ├── useEvent.md
     ├── useOpenDialog.md
     └── useResizeObserver.md
 ```
@@ -184,6 +188,7 @@ npm run dev
 ## 📝 更新日志
 
 ### v1.0.0
+
 - 初始版本发布
 - 支持动态表单构建
 - 提供丰富的表单组件

@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { EFormComponentType } from "@/packages/components/c-form/core/constants/enum.ts";
-import { createCustomCFormItem } from "@/packages/components/c-form/core/helper/createCustomCFormItem.ts";
-import { createFormItem } from "@/packages/components/c-form/core/helper/createFormItem.ts";
-import { useCreateFormBuilder } from "@/packages/components/c-form/core/hooks/useCreateFormBuilder.ts";
+import {
+  EFormComponentType,
+  createCustomCFormItem,
+  createFormItem,
+  useCreateFormBuilder,
+} from "ep-toolkit";
 import TestCustomComponent from "@play/components/TestCustomComponent.vue";
 import { repeatFormItems } from "@play/utils/array.ts";
 import { ATTRS_OPTIONS, CASCADER_OPTIONS } from "@play/utils/options.ts";
@@ -17,7 +19,7 @@ const { useRowLayout = true, expandDepth = 1 } = defineProps<{
 }>();
 
 const { formBuilder } = useCreateFormBuilder(
-  repeatFormItems(
+  repeatFormItems<TObj>(
     [
       createFormItem({
         tag: EFormComponentType.INPUT,
@@ -153,7 +155,7 @@ formBuilder.onChange(() => {
 </script>
 
 <template>
-  <div class="test-form__container">
+  <div class="search-form__container">
     <CSearchForm
       :form-builder="formBuilder"
       :expand-depth="expandDepth"
@@ -162,7 +164,7 @@ formBuilder.onChange(() => {
 </template>
 
 <style scoped lang="scss">
-.test-form__container {
+.search-form__container {
   padding: 16px 24px;
 }
 </style>

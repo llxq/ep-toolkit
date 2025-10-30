@@ -1,5 +1,6 @@
 import { filterComponentEmptyProps } from "@/packages/components/c-form/core/helper/component.ts";
 import type { ICFormProps } from "@/packages/components/c-form/core/types/formProps.ts";
+import { epToolkitConfigService } from "@/packages/store/config/index.service.ts";
 import { merge, assign, omit } from "lodash";
 import type { RowProps } from "element-plus";
 import type { IStyle } from "@/packages/components/c-form/core/types/shared.ts";
@@ -11,7 +12,9 @@ export class FormConfigManager {
   /**
    * 表单配置
    */
-  public config: ICFormProps = {} as ICFormProps;
+  public config: ICFormProps = {
+    ...(epToolkitConfigService.formConfig ?? {}),
+  } as ICFormProps;
 
   /**
    * 获取表单属性，剔除一些多余的属性。

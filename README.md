@@ -1,8 +1,9 @@
-# ep-kit
+# ep-toolkit
 
 ## 介绍
+
 一个基于 [Element Plus](https://github.com/element-plus/element-plus) 的声明式表单和表格组件库。它通过 JSON 配置即可动态渲染界面，并提供了丰富的通用工具函数和 Hooks，旨在极大提升中后台前端应用的开发效率。
 
 ## License
-`ep-kit` 是基于 [Element Plus](https://github.com/element-plus/element-plus) 进行二次开发的工具库，遵循 [MIT License](https://github.com/llxq/ep-kit/blob/main/LICENSE) 许可协议。
 
+`ep-toolkit` 是基于 [Element Plus](https://github.com/element-plus/element-plus) 进行二次开发的工具库，遵循 [MIT License](https://github.com/llxq/ep-toolkit/blob/main/LICENSE) 许可协议。

@@ -1,6 +1,6 @@
 import { getCurrentScope, onBeforeUnmount, onScopeDispose } from "vue";
 
-interface ListenerStackItem {
+interface IListenerStackItem {
   target: EventTarget;
   event: string;
   fn: EventListenerOrEventListenerObject;
@@ -12,22 +12,22 @@ interface ListenerStackItem {
  *
  * @example
  * // 指定目标（document）
- * const { on, stop } = useListenEvent();
+ * const { on, stop } = useEvent();
  * on(document, "scroll", () => {
  *   console.log(1);
  * }, { passive: false });
  *
  * @example
  * // 向后兼容：不指定目标，默认绑定到 document.body
- * const { on } = useListenEvent();
+ * const { on } = useEvent();
  * on("click", (e) => {
  *   // ...
  * }, { passive: true });
  */
-export const useListenEvent = () => {
+export const useEvent = () => {
   const getDefaultTarget = () => document.body as EventTarget;
 
-  const stacks: ListenerStackItem[] = [];
+  const stacks: IListenerStackItem[] = [];
 
   // 类型工具：根据不同 target 推导事件 Map
   type EventMapFor<Target> = Target extends HTMLElement
@@ -42,12 +42,12 @@ export const useListenEvent = () => {
    * 绑定事件监听
    *
    * @example
-   * const { on } = useListenEvent();
+   * const { on } = useEvent();
    * on(document, "scroll", (e) => { // ...
    * }, { passive: false });
    *
    * @example
-   * const { on } = useListenEvent();
+   * const { on } = useEvent();
    * on("click", (e) => { // ...
    * }, { passive: true });
    */
@@ -56,14 +56,14 @@ export const useListenEvent = () => {
     event: K,
     fn: (_: HTMLElementEventMap[K]) => void,
     options?: boolean | AddEventListenerOptions,
-  ): void;
+  ): () => void;
   // 重载：HTMLElement 目标
   function on<Target extends HTMLElement, K extends keyof EventMapFor<Target>>(
     target: Target,
     event: K,
     fn: (_: EventMapFor<Target>[K]) => void,
     options?: boolean | AddEventListenerOptions,
-  ): void;
+  ): () => void;
   // 重载：Document 目标
   function on<
     Target extends typeof document,
@@ -73,7 +73,7 @@ export const useListenEvent = () => {
     event: K,
     fn: (_: EventMapFor<Target>[K]) => void,
     options?: boolean | AddEventListenerOptions,
-  ): void;
+  ): () => void;
   // 重载：Window 目标
   function on<
     Target extends typeof window,
@@ -83,7 +83,7 @@ export const useListenEvent = () => {
     event: K,
     fn: (_: EventMapFor<Target>[K]) => void,
     options?: boolean | AddEventListenerOptions,
-  ): void;
+  ): () => void;
   // 实现
   function on(
     targetOrEvent: EventTarget | string,
@@ -93,22 +93,27 @@ export const useListenEvent = () => {
       | boolean
       | AddEventListenerOptions,
     maybeOptions?: boolean | AddEventListenerOptions,
-  ): void {
+  ): () => void {
     let target: EventTarget;
     let event: string;
     let fn: EventListenerOrEventListenerObject;
     let options: boolean | AddEventListenerOptions | undefined;
 
     if (typeof targetOrEvent === "string") {
+      // 兼容老签名：on(event, fn, options)
       target = getDefaultTarget();
       event = targetOrEvent;
       fn = eventOrFn as EventListenerOrEventListenerObject;
       options = fnOrOptions as boolean | AddEventListenerOptions | undefined;
     } else {
+      // 新签名：on(target, event, fn, options)
       target = targetOrEvent;
       event = eventOrFn as string;
       fn = fnOrOptions as EventListenerOrEventListenerObject;
       options = maybeOptions as boolean | AddEventListenerOptions | undefined;
+    }
+    if (!target) {
+      return () => {};
     }
 
     target.addEventListener(
@@ -116,7 +121,17 @@ export const useListenEvent = () => {
       fn as EventListener,
       options as AddEventListenerOptions,
     );
-    stacks.push({ target, event, fn, options });
+    const stackItem = { target, event, fn, options };
+    stacks.push(stackItem);
+
+    return () => {
+      target.removeEventListener(
+        event,
+        fn as EventListener,
+        options as AddEventListenerOptions,
+      );
+      stacks.splice(stacks.indexOf(stackItem), 1);
+    };
   }
 
   const stop = () => {

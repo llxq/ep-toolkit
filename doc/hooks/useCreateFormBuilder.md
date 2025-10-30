@@ -5,48 +5,49 @@
 ## 基础用法
 
 ```typescript
-import { EFormComponentType } from '@/packages/components/c-form/core/constants/enum'
-import { useCreateFormBuilder } from '@/packages/components/c-form'
+import { EFormComponentType } from "@/packages/components/c-form/core/constants/enum";
+import { useCreateFormBuilder } from "@/packages/components/c-form";
 
 const { formBuilder } = useCreateFormBuilder<{
-  username: string
-  email: string
+  username: string;
+  email: string;
 }>([
   {
     tag: EFormComponentType.INPUT,
-    label: '用户名',
-    prop: 'username',
-    attrs: { placeholder: '请输入用户名' }
+    label: "用户名",
+    prop: "username",
+    attrs: { placeholder: "请输入用户名" },
   },
   {
     tag: EFormComponentType.INPUT,
-    label: '邮箱',
-    prop: 'email',
-    attrs: { placeholder: '请输入邮箱' }
-  }
-])
+    label: "邮箱",
+    prop: "email",
+    attrs: { placeholder: "请输入邮箱" },
+  },
+]);
 ```
 
 ## 动态表单构建
 
 ```typescript
-import { EFormComponentType } from '@/packages/components/c-form/core/constants/enum'
-import { useDynamicCreateFormBuilder } from '@/packages/components/c-form'
+import { EFormComponentType } from "@/packages/components/c-form/core/constants/enum";
+import { useDynamicCreateFormBuilder } from "@/packages/components/c-form";
 
 const { formBuilder } = useDynamicCreateFormBuilder<{
-  searchKey: [string, string]
+  searchKey: [string, string];
 }>(({ formData }) => {
   return [
     {
       tag: EFormComponentType.GROUP_SELECT_INPUT,
-      label: '搜索',
-      prop: 'searchKey',
+      label: "搜索",
+      prop: "searchKey",
       attrs: {
-        placeholder: formData.searchKey?.[1] === 'type1' ? '请输入类型1' : '请输入类型2'
-      }
-    }
-  ]
-})
+        placeholder:
+          formData.searchKey?.[1] === "type1" ? "请输入类型1" : "请输入类型2",
+      },
+    },
+  ];
+});
 ```
 
 ## API
@@ -89,46 +90,45 @@ const { formBuilder } = useDynamicCreateFormBuilder<{
 
 ### ICreateFormBuilderConfig
 
-| 参数            | 说明            | 类型    | 默认值 |
-| --------------- | --------------- | ------- | ------ |
-| isAutoInit      | 是否自动初始化  | boolean | true   |
-| useRowLayout    | 是否使用行布局  | boolean | true   |
-| elRowAttrs      | el-row 属性     | object  | {}     |
-| modelValue      | 表单数据        | object  | {}     |
-| className       | 表单类名        | string  | -      |
-| startLoading    | 是否开启loading | boolean | true   |
-| initialFormData | 初始表单数据    | object  | {}     |
-| baseTableRef    | 关联的表格引用  | Ref     | -      |
+| 参数            | 说明           | 类型    | 默认值 |
+| --------------- | -------------- | ------- | ------ |
+| isAutoInit      | 是否自动初始化 | boolean | true   |
+| useRowLayout    | 是否使用行布局 | boolean | true   |
+| elRowAttrs      | el-row 属性    | object  | {}     |
+| modelValue      | 表单数据       | object  | {}     |
+| className       | 表单类名       | string  | -      |
+| initialFormData | 初始表单数据   | object  | {}     |
+| baseTableRef    | 关联的表格引用 | Ref     | -      |
 
 ## 使用示例
 
 ### 基础表单
 
 ```typescript
-import { EFormComponentType } from '@/packages/components/c-form/core/constants/enum'
+import { EFormComponentType } from "@/packages/components/c-form/core/constants/enum";
 
 const { formBuilder } = useCreateFormBuilder([
   {
     tag: EFormComponentType.INPUT,
-    label: '用户名',
-    prop: 'username',
-    attrs: { 
-      placeholder: '请输入用户名',
-      required: true 
-    }
+    label: "用户名",
+    prop: "username",
+    attrs: {
+      placeholder: "请输入用户名",
+      required: true,
+    },
   },
   {
     tag: EFormComponentType.SELECT,
-    label: '角色',
-    prop: 'role',
+    label: "角色",
+    prop: "role",
     attrs: {
       options: [
-        { label: '管理员', value: 'admin' },
-        { label: '用户', value: 'user' }
-      ]
-    }
-  }
-])
+        { label: "管理员", value: "admin" },
+        { label: "用户", value: "user" },
+      ],
+    },
+  },
+]);
 ```
 
 ### 带配置的表单
@@ -136,70 +136,70 @@ const { formBuilder } = useCreateFormBuilder([
 ```typescript
 const { formBuilder } = useCreateFormBuilder(formItems, {
   useRowLayout: false,
-  className: 'custom-form',
+  className: "custom-form",
   elRowAttrs: {
-    gutter: 20
-  }
-})
+    gutter: 20,
+  },
+});
 ```
 
 ### 关联表格的表单
 
 ```typescript
-const tableRef = ref()
+const tableRef = ref();
 
 const { formBuilder } = useCreateFormBuilder(formItems, {
-  baseTableRef: tableRef
-})
+  baseTableRef: tableRef,
+});
 
 // 表单变化时自动刷新表格
 formBuilder.onChange(() => {
-  console.log('表单数据变化，表格将自动刷新')
-})
+  console.log("表单数据变化，表格将自动刷新");
+});
 ```
 
 ### 动态表单
 
 ```typescript
-import { EFormComponentType } from '@/packages/components/c-form/core/constants/enum'
+import { EFormComponentType } from "@/packages/components/c-form/core/constants/enum";
 
 const { formBuilder } = useDynamicCreateFormBuilder<{
-  type: string
-  config: any
+  type: string;
+  config: any;
 }>(({ formData }) => {
   const items = [
     {
       tag: EFormComponentType.SELECT,
-      label: '类型',
-      prop: 'type',
+      label: "类型",
+      prop: "type",
       attrs: {
         options: [
-          { label: '类型1', value: 'type1' },
-          { label: '类型2', value: 'type2' }
-        ]
-      }
-    }
-  ]
-  
+          { label: "类型1", value: "type1" },
+          { label: "类型2", value: "type2" },
+        ],
+      },
+    },
+  ];
+
   // 根据类型动态添加配置项
-  if (formData.type === 'type1') {
+  if (formData.type === "type1") {
     items.push({
       tag: EFormComponentType.INPUT,
-      label: '配置1',
-      prop: 'config',
-      attrs: { placeholder: '请输入配置1' }
-    })
-  } else if (formData.type === 'type2') {
+      label: "配置1",
+      prop: "config",
+      attrs: { placeholder: "请输入配置1" },
+    });
+  } else if (formData.type === "type2") {
     items.push({
       tag: EFormComponentType.DATE,
-      label: '配置2',
-      prop: 'config',
-      attrs: { type: 'date' }
-    })
+      label: "配置2",
+      prop: "config",
+      attrs: { type: "date" },
+    });
   }
-  
-  return items
-})
+
+  return items;
+});
 ```
 
 ## 源码位置
@@ -233,22 +233,24 @@ const { formBuilder } = useDynamicCreateFormBuilder<{
 除了预定义的组件类型，还支持自定义组件：
 
 ```typescript
-import MyCustomComponent from './MyCustomComponent.vue'
+import MyCustomComponent from "./MyCustomComponent.vue";
 
 const { formBuilder } = useCreateFormBuilder([
   {
     tag: MyCustomComponent, // 直接传入组件
-    label: '自定义组件',
-    prop: 'custom',
-    attrs: { /* 组件属性 */ }
+    label: "自定义组件",
+    prop: "custom",
+    attrs: {
+      /* 组件属性 */
+    },
   },
   {
-    tag: 'div', // 或者使用字符串标签
-    label: 'HTML 元素',
-    prop: 'html',
-    attrs: { style: { color: 'red' } }
-  }
-])
+    tag: "div", // 或者使用字符串标签
+    label: "HTML 元素",
+    prop: "html",
+    attrs: { style: { color: "red" } },
+  },
+]);
 ```
 
 ## 注意事项

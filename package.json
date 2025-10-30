@@ -39,7 +39,9 @@
     "dayjs": "^1.11.18",
     "element-plus": "^2.11.4",
     "emoji-regex": "^10.5.0",
+    "lodash": "^4.17.21",
     "vue": "^3.5.22",
+    "vue-draggable-plus": "^0.6.0",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {

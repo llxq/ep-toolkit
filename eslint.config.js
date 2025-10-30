@@ -66,9 +66,18 @@ export default [
       "vue/max-attributes-per-line": "off",
       "vue/no-required-prop-with-default": "off",
       "vue/html-self-closing": "off",
+      "vue/multi-word-component-names": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
     },
   },
   {
-    ignores: ["**/*.d.ts", "dist/**/*", "**/*.json", "**/*.md"],
+    ignores: [
+      "**/*.d.ts",
+      "dist/**/*",
+      "**/*.json",
+      "**/*.md",
+      "**/*.md",
+      "play/**/*",
+    ],
   },
 ];

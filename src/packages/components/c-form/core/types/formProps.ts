@@ -36,11 +36,6 @@ export interface ICFormProps extends Partial<Omit<FormProps, "model">> {
    */
   className?: string;
   /**
-   * 是否开启loading，默认开启loading
-   * @default true
-   */
-  startLoading?: boolean;
-  /**
    * 初始化的值
    */
   initialFormData?: TObj;
@@ -50,7 +45,7 @@ export interface IFormItem<T extends TObj = TObj> extends IStyle {
   /**
    * 组件类型
    */
-  tag: EFormComponentType;
+  tag: EFormComponentType | string;
   /**
    * label名称
    */
