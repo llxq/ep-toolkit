@@ -12,6 +12,15 @@
     "toolkit",
     "vue3"
   ],
+  "description": "一个基于 Element Plus 的声明式组件和工具库",
+  "license": "MIT",
+  "author": "chendf",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/llxq/ep-toolkit.git"
+  },
+  "homepage": "https://github.com/llxq/ep-toolkit#README.md",
+  "bugs": "https://github.com/llxq/ep-toolkit/issues",
   "files": [
     "dist",
     "package.json",
@@ -32,7 +41,7 @@
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
     "prepare": "husky",
-    "psh": "npm run build && npm publish --access public"
+    "psh": "npm run build && npm publish --registry=https://registry.npmjs.org --access public"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",

@@ -30,26 +30,37 @@ EP-Toolkit 是一个基于 Vue 3 和 Element Plus 的组件库，提供了丰富
 npm install ep-toolkit
 ```
 
-### 基础使用
+#### 注册
 
-```vue
-<template>
-  <c-form :form-builder="formBuilder" />
-</template>
+```js
+// 导入css
+import "ep-toolkit/dist/index.css";
+import { createApp } from "vue";
+import { EpToolkit } from "ep-toolkit";
 
-<script setup>
-import { EFormComponentType } from "ep-toolkit";
-import { useCreateFormBuilder } from "ep-toolkit";
+createApp(App).use(EpToolkit).mount("#app");
+```
 
-const { formBuilder } = useCreateFormBuilder([
-  {
-    tag: EFormComponentType.INPUT,
-    label: "用户名",
-    prop: "username",
-    attrs: { placeholder: "请输入用户名" },
-  },
-]);
-</script>
+#### 如果想要修改一些基础配置，可以使用全局配置
+
+```js
+// 导入css
+import "ep-toolkit/dist/index.css";
+import { createApp } from "vue";
+import { EpToolkit } from "ep-toolkit";
+
+createApp(App)
+  .use(EpToolkit, {
+    formConfig: {
+      // ...
+      useRowLayout: true,
+    },
+    tableConfig: {
+      // ...
+      rowKey: "_id",
+    },
+  })
+  .mount("#app");
 ```
 
 ## 📖 使用指南
@@ -88,12 +99,91 @@ const { formBuilder } = useCreateFormBuilder([
 使用 `C-Search-Form` 组件创建搜索表单：
 
 ```vue
+<script setup lang="tsx">
+import { type ICTableColumn, useCreateTableBuilder } from "ep-toolkit";
+
+defineOptions({
+  name: "PlayTable",
+});
+
+const updateData = (row: Record<string, string>) => {
+  console.log(row);
+};
+const deleteData = (row: Record<string, string>) => {
+  console.log(row);
+};
+
+const columns: ICTableColumn[] = [
+  {
+    type: "index",
+  },
+  {
+    label: "自定义",
+    contentRender: (_, row) => {
+      return row.label + "-自定义";
+    },
+  },
+  {
+    label: "ID",
+    prop: "id",
+    draggable: true,
+  },
+  {
+    label: "文本",
+    prop: "label",
+    /**
+     * 支持 el-table-column 的所有属性
+     */
+    showOverflowTooltip: true,
+  },
+  {
+    label: "操作",
+    contentRender: (_, row) => [
+      <el-button type="primary" link onClick={() => updateData(row)}>
+        修改
+      </el-button>,
+      <el-button type="danger" link onClick={() => deleteData(row)}>
+        删除
+      </el-button>,
+    ],
+  },
+];
+
+const { tableBuilder, registerEvent } = useCreateTableBuilder(columns, {
+  headerCellStyle: {
+    background: "#fafafc",
+  },
+  loadMethod: (pagination) => {
+    const data = Array.from({ length: 10 * pagination.current }).map(
+      (_, index) => ({
+        id: (index + 1).toString(),
+        label: "文本",
+      }),
+    );
+    return {
+      data,
+      total: 100,
+    };
+  },
+});
+// 分页事件修改触发
+registerEvent("pagination:change", (a: string) => {
+  console.log("pagination trigger", a);
+});
+</script>
+
 <template>
-  <c-search-form
-    :form-builder="searchFormBuilder"
-    :auto-expand="true"
-    :expand-depth="2"
-  />
+  <CTable :table-builder="tableBuilder" />
+</template>
+```
+
+### 表格
+
+使用 `C-Table` 组件创建表格：
+
+```vue
+<template>
+  <c-table :table-config="tableConfig" />
 </template>
 ```
 
@@ -130,17 +220,19 @@ const { onResize } = useResizeObserver();
 
 ```
 src/packages/
-├── components/          # 组件
-│   ├── c-auto-tooltip/ # 自动提示组件
-│   ├── c-form/         # 表单组件
-│   ├── c-search-form/ # 搜索表单组件
-│   └── c-table/       # 表格组件
-├── hooks/              # Hooks
+├── components/                 # 组件
+│   ├── c-auto-tooltip/         # 自动提示组件
+│   ├── c-form/                 # 表单组件
+│   ├── c-search-form/          # 搜索表单组件
+│   └── c-table/                # 表格组件
+│   └── c-table-link-button/    # 表格链接按钮
+├── hooks/                      # Hooks
 │   ├── useAsyncLoader.ts
 │   ├── useEvent.ts
 │   ├── useOpenDialog.ts
 │   └── useResizeObserver.ts
-└── directives/         # 指令
+└── directives/                 # 指令
+└── utils/                      # utils
 ```
 
 ### 文档结构

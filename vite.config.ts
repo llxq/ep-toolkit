@@ -50,9 +50,15 @@ export default defineConfig({
           lodash: "_",
           "vue-draggable-plus": "vueDraggablePlus",
         },
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.names.includes("ep-toolkit.css")) {
+            return "index.css";
+          }
+          return "assets/[name].[ext]";
+        },
       },
       external: Object.keys(pkg.dependencies).filter(
-        (dep) => !["lodash", "emoji-regex"].includes(dep),
+        (dep) => !["lodash", "emoji-regex", "vue-draggable-plus"].includes(dep),
       ),
     },
   },
