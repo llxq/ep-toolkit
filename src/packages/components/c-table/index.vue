@@ -1,16 +1,18 @@
 <script setup lang="tsx">
+import ColumnSearch from "@/packages/components/c-table/components/ColumnSearch.vue";
 import { C_TABLE_EVENTS } from "@/packages/components/c-table/core/constants/event.ts";
 import {
   SPECIAL_COLUMN_MAP,
   TABLE_DRAGGABLE_CLASS,
 } from "@/packages/components/c-table/core/constants/vNode.tsx";
+import { useColumnSearch } from "@/packages/components/c-table/hooks/useColumnSearch.ts";
 import { epToolkitConfigService } from "@/packages/store/config/index.service.ts";
 import { type SetupContext, type SlotsType, useSlots } from "vue";
 import {
-  RenderComponent,
   RenderCTableHeaderComponent,
   RenderCTableColumnComponent,
 } from "./components/Render.tsx";
+import { RenderComponent } from "@/helper/render.tsx";
 import type { TableBuilder } from "./core/TableBuilder.ts";
 import { useCTable } from "./hooks/useCTable.tsx";
 import { VueDraggable } from "vue-draggable-plus";
@@ -30,8 +32,16 @@ defineSlots<{
   append: () => void;
 }>();
 
-const { initElTableInstance, getPaginationProps, config, onDrag, dragChange } =
-  useCTable(tableBuilder);
+const {
+  initElTableInstance,
+  getPaginationProps,
+  config,
+  onDrag,
+  dragChange,
+  elTableRef,
+} = useCTable(tableBuilder);
+
+const { count, find, clear } = useColumnSearch(elTableRef);
 
 const slots = useSlots();
 const getOtherSlots = () => {
@@ -60,7 +70,14 @@ const CTableWrapper = (_: unknown, { slots }: SetupContext) => {
       </VueDraggable>
     );
   }
-  return slots.default ? slots.default() : null;
+  return slots.default?.();
+};
+
+const CTableHeaderWrapper = (_: unknown, { slots }: SetupContext) => {
+  if (config.value.enableColumnSearch && count.value > 0) {
+    return <div class="c-table__header-wrapper">{slots.default?.()}</div>;
+  }
+  return slots.default?.();
 };
 </script>
 
@@ -87,11 +104,13 @@ const CTableWrapper = (_: unknown, { slots }: SetupContext) => {
             :class-name="column.className"
           >
             <template #header="{ column: headerColumn, $index }">
-              <RenderCTableHeaderComponent
-                :column="column.props"
-                :header-column="headerColumn"
-                :index="$index"
-              />
+              <CTableHeaderWrapper>
+                <RenderCTableHeaderComponent
+                  :column="column.props"
+                  :header-column="headerColumn"
+                  :index="$index"
+                />
+              </CTableHeaderWrapper>
             </template>
 
             <template #default="{ row, $index }">
@@ -164,15 +183,36 @@ const CTableWrapper = (_: unknown, { slots }: SetupContext) => {
       ></el-pagination>
     </div>
   </div>
+  <ColumnSearch
+    v-if="config.enableColumnSearch"
+    :count="count"
+    @find="find"
+    @hidden="clear"
+  />
 </template>
 
 <style scoped lang="scss">
 .c-table__container {
+  --table-search-result-bg-color: rgb(244, 154, 70);
+  --table-search-result-color: #000;
+
   .c-table__body {
     .c-table__table {
       :deep() {
         .c-table__column__is-draggable {
           cursor: move;
+        }
+
+        .c-table__header-wrapper {
+          display: contents;
+        }
+
+        .el-table__cell__search-result {
+          .c-table__header-wrapper {
+            background-color: var(--table-search-result-bg-color);
+            display: unset;
+            color: var(--table-search-result-color);
+          }
         }
       }
     }

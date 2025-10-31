@@ -9,6 +9,7 @@ class EpToolkitConfigService {
   private config: IEpToolkitConfig = {
     formConfig: {
       useRowLayout: true,
+      resetTriggerQuery: true,
     },
     tableConfig: {
       autoLoad: true,
@@ -34,6 +35,10 @@ class EpToolkitConfigService {
        * 分页默认显示在左侧
        */
       paginationPosition: "left",
+      /**
+       * 是否启用列搜索
+       */
+      enableColumnSearch: false,
     },
   };
 

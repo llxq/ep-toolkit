@@ -136,6 +136,7 @@ const { tableBuilder, refresh } = useCreateTableBuilder<ITableItem>(
         ...pagination,
         ...formBuilder.getFormatData(),
       }),
+    enableColumnSearch: true,
   },
 );
 </script>

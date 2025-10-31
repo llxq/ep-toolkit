@@ -1,5 +1,4 @@
 import { isEmptyCellValue } from "@/helper/is.ts";
-import type { TRenderFunction } from "@/helper/type.ts";
 import CTableLinkButton from "@/packages/components/c-table-link-button/index.vue";
 import {
   TABLE_EMPTY_NODE,
@@ -7,16 +6,8 @@ import {
 } from "@/packages/components/c-table/core/constants/vNode.tsx";
 import type { ICTableColumn } from "@/packages/components/c-table/core/types/tabColumn.ts";
 import { camelizeObject } from "@/packages/utils";
-import { isFunction, isEmpty } from "lodash";
+import { isEmpty, isFunction } from "lodash";
 import { h } from "vue";
-
-/**
- * 通用的渲染函数组件
- * @param render
- * @constructor
- */
-export const RenderComponent = (render?: TRenderFunction) =>
-  isFunction(render) ? render(h) : null;
 
 /**
  * 渲染表头

@@ -1,9 +1,10 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 import { isHiddenNode } from "@/helper/html.ts";
 import { EFormEvent } from "@/packages/components/c-form/core/constants/enum.ts";
 import type { FormBuilder } from "@/packages/components/c-form/core/FormBuilder.ts";
 import CForm from "@/packages/components/c-form/index.vue";
 import { useResizeObserver } from "@/packages/hooks";
+import { epToolkitConfigService } from "@/packages/store/config/index.service.ts";
 import { ArrowDownBold, Refresh, Search } from "@element-plus/icons-vue";
 import { isString } from "lodash";
 import { nextTick, ref, type VNode, watch } from "vue";
@@ -115,7 +116,10 @@ const search = () => {
 };
 
 const reset = () => {
-  formBuilder.reset();
+  // 是否触发查询
+  formBuilder.reset(
+    epToolkitConfigService.formConfig?.resetTriggerQuery ? void 0 : "change",
+  );
 };
 </script>
 
@@ -146,7 +150,7 @@ const reset = () => {
       </template>
     </CForm>
     <div class="c-search-form__operation">
-      <slot name="operation">
+      <slot name="operation" v-bind="{ search, reset }">
         <el-button type="primary" :icon="Search" @click="search">
           查询
         </el-button>

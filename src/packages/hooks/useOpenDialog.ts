@@ -11,6 +11,7 @@ import {
   render,
   type VNode,
   watch,
+  watchEffect,
 } from "vue";
 import { useRoute } from "vue-router";
 
@@ -106,48 +107,34 @@ const getListenerName = (event: string) => {
   return `on${firstChar.toUpperCase() + rest.join("")}`;
 };
 
+const allIdStacks = ref<
+  Map<TNumberOrString, { id: TNumberOrString; cleanup: () => void }[]>
+>(new Map());
 /**
- * 通过函数式方式打开一个弹框
- * @example
- * ```xxxDialog
- * <template>
- *   <el-dialog v-model="dialogVisible" @dialog:confirm="confirm" @dialog:cancel="cancel">
- *     this is xxxDialog
- *   </el-dialog>
- * </template>
- *
- * <script setup lang="ts">
- *   import { ref } from "vue";
- *
- *   const emit = defineEmits(["dialog:confirm", "dialog:cancel"]);
- *
- *   const dialogVisible = ref(false);
- *
- *   const confirm = () => {
- *     emit("dialog:confirm");
- *   };
- *   const cancel = () => {
- *     emit("dialog:cancel");
- *   };
- * </script>
- * ```
- *
- * import xxxDialog from "xxxDialog.vue";
- *
- * const { openDialog } = useOpenDialog();
- * openDialog(xxxDialog, {xxProp: 1}).then(() => {
- *   console.log("close to confirm");
- * }).catch(() => {
- *   console.log("close to cancel");
- * });
+ * 关闭所有弹框
  */
+export const closeAllDialog = () => {
+  allIdStacks.value.forEach((stacks) => {
+    stacks.forEach((it) => it.cleanup());
+  });
+  allIdStacks.value.clear();
+};
+
 export const useOpenDialog = () => {
   const checkAppContext = getCurrentInstance()?.appContext;
 
   if (!checkAppContext) {
     console.warn("useOpenDialog must be called in setup");
   }
+  const dialogId = getNextUid();
   const idStacks = ref<{ id: TNumberOrString; cleanup: () => void }[]>([]);
+  watchEffect(() => {
+    if (idStacks.value.length) {
+      allIdStacks.value.set(dialogId, idStacks.value);
+    } else {
+      allIdStacks.value.delete(dialogId);
+    }
+  });
 
   const { mount } = useMountDialog();
 

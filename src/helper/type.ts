@@ -29,11 +29,16 @@ export interface IElTableInstance {
   getSelectionRows(): any[];
 
   /**
-   * 用于多选表格，切换某一行的选中状态
+   * 用于多选表格，切换某一行的选中状态， 如果使用了第二个参数，则可直接设置这一行选中与否
    * @param row 要切换选中状态的行
    * @param selected 是否选中，如果设置则直接设置选中状态
+   * @param ignoreSelectable 是否忽略选中状态
    */
-  toggleRowSelection(row: any, selected?: boolean): void;
+  toggleRowSelection(
+    row: any,
+    selected?: boolean,
+    ignoreSelectable?: boolean,
+  ): void;
 
   /**
    * 用于多选表格，切换全选和全不选
@@ -41,14 +46,14 @@ export interface IElTableInstance {
   toggleAllSelection(): void;
 
   /**
-   * 用于可扩展的表格或树表格，切换行的展开状态
+   * 用于可扩展的表格或树表格，如果某行被扩展，则切换。 使用第二个参数，您可以直接设置该行应该被扩展或折叠。
    * @param row 要切换展开状态的行
    * @param expanded 是否展开，如果设置则直接设置展开状态
    */
   toggleRowExpansion(row: any, expanded?: boolean): void;
 
   /**
-   * 用于单选表格，设定某一行为选中行
+   * 用于单选表格，设定某一行为选中行， 如果调用时不加参数，则会取消目前高亮行的选中状态。
    * @param row 要选中的行，如果不传参数则取消当前选中的行
    */
   setCurrentRow(row?: any): void;
@@ -59,18 +64,18 @@ export interface IElTableInstance {
   clearSort(): void;
 
   /**
-   * 清除过滤条件
+   * 传入由columnKey 组成的数组以清除指定列的过滤条件。 如果没有参数，清除所有过滤器
    * @param columnKeys 由columnKey组成的数组，用于清除指定列的过滤条件。如果不传，则清除所有过滤器
    */
   clearFilter(columnKeys?: string[]): void;
 
   /**
-   * 对 Table 进行重新布局。当表格可见性变化时，可能需要调用此方法以获得正确的布局
+   * 对 Table 进行重新布局。 当表格可见性变化时，您可能需要调用此方法以获得正确的布局
    */
   doLayout(): void;
 
   /**
-   * 手动排序表格
+   * 手动排序表格。 参数 prop 属性指定排序列，order 指定排序顺序。
    * @param prop 排序列的 prop
    * @param order 排序顺序，'ascending' 或 'descending'
    */
@@ -78,13 +83,10 @@ export interface IElTableInstance {
 
   /**
    * 滚动到一组特定坐标
-   * @param options 滚动位置选项
+   * @param options 滚动选项
+   * @param yCoord 垂直坐标
    */
-  scrollTo(options: {
-    top?: number;
-    left?: number;
-    behavior?: "auto" | "smooth";
-  }): void;
+  scrollTo(options: number | ScrollToOptions, yCoord?: number): void;
 
   /**
    * 设置垂直滚动位置
@@ -96,7 +98,7 @@ export interface IElTableInstance {
    * 设置水平滚动位置
    * @param left 水平滚动位置
    */
-  setScrollLeft(left: number): void;
+  setScrollLeft(left?: number): void;
 
   /**
    * 获取表列的 context
@@ -106,9 +108,9 @@ export interface IElTableInstance {
   /**
    * 适用于 lazy Table, 需要设置 rowKey, 更新 key children
    * @param key 行的 key
-   * @param children 子节点数据
+   * @param data 子节点数据
    */
-  updateKeyChildren(key: string | number, children: any[]): void;
+  updateKeyChildren(key: string, data: any[]): void;
 
   // Vue 实例属性
   /**

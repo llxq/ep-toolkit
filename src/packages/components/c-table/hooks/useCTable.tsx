@@ -74,5 +74,6 @@ export const useCTable = <T extends TObj>(tableBuilder: TableBuilder<T>) => {
     config,
     onDrag,
     dragChange,
+    elTableRef,
   };
 };

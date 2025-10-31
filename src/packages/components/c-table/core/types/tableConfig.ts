@@ -60,6 +60,7 @@ export interface ITableConfig<T extends TObj> extends Partial<TableProps<T>> {
   /**
    * 是否开启列搜索
    * @default false
+   * @description 默认的 el-table 如果使用浏览器自带的搜索功能，表格的列搜索的结果是不会随着搜索条词变化而滚动的。开启这个功能可以模拟浏览器的搜索效果从而让列搜索的结果随着搜索条词变化而滚动
    */
   enableColumnSearch?: boolean;
 

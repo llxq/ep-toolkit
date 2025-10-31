@@ -14,11 +14,19 @@ export interface IEpToolkitTableConfig {
   columnEmptyRender?: TRenderFunction;
 }
 
+export interface IEpToolkitFormConfig {
+  /**
+   * 重置按钮是否触发查询
+   * @default true
+   */
+  resetTriggerQuery?: boolean;
+}
+
 export interface IEpToolkitConfig {
   /**
    * 表单的配置
    */
-  formConfig?: Partial<ICFormProps>;
+  formConfig?: Partial<ICFormProps> & IEpToolkitFormConfig;
   /**
    * 表格的配置
    */

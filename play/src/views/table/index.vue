@@ -68,6 +68,7 @@ const { tableBuilder, registerEvent } = useCreateTableBuilder(columns, {
       total: 100,
     };
   },
+  enableColumnSearch: true,
 });
 registerEvent("pagination:change", (a: string) => {
   console.log("pagination trigger", a);
